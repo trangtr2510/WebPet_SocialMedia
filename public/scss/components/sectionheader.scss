@@ -1,0 +1,34 @@
+.section{
+    width: 100%;
+    &_header{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5rem;
+        &_p{
+            color: $text;
+        }
+        &_h2{
+            color: $secondary_color_2;
+            &_2{
+                color: $primary_color_1;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .section{
+        width: 100%;
+        &_header{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            &_left{
+                margin-bottom: 2rem;
+            }
+            
+        }
+    }
+}

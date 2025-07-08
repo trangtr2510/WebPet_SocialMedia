@@ -1,0 +1,496 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap'); 
+
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+:root {
+    --linear-grad: linear-gradient(to right, #003459, #4ca1af);
+    --grad-clr1: #003459;
+    --grad-clr2: #114f7a;
+}
+
+body {
+    height: 100vh;
+    background: #f6f5f7;
+    display: grid;
+    place-content: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.alert p{
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin: 10px auto;
+    text-align: center;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    width: 50%;
+}
+
+.container{
+    position: relative;
+    width: 850px;
+    height: 500px;
+    background-color: #fff;
+    box-shadow: 25px 30px 55px #5557;
+    border-radius: 13px;
+    overflow: hidden;
+}
+
+.form-container{
+    position: absolute;
+    width: 60%;
+    height: 100%;
+    padding: 0px 40px;
+    transition: all 0.6s ease-in-out;
+}
+
+.sign-up-container{
+    opacity: 0;
+    z-index: 1;
+}
+
+.sign-in-container{
+    z-index: 2;
+}
+
+form{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 50px;
+}
+
+h1{
+    color: var(--grad-clr1);
+}
+
+.social-container{
+    margin: 20px 0px;
+}
+
+.social-container a {
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 5px;
+    height: 40px;
+    width: 40px;
+}
+
+span{
+    font-size: 12px;
+}
+
+.infield{
+    position: relative;
+    margin: 8px 0px;
+    width: 100%;
+}
+
+.infield_btn {
+    position: relative;
+    margin: 8px 0px;
+    display: flex;
+}
+
+.infield_btn > input{
+    width: 80%;
+}
+
+.infield_btn > .btn{
+    width: 20%;
+    height: 100%;
+    margin-left: 1rem;
+    margin-top: 0;
+}
+
+input{
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #f3f3f3;
+    border: none;
+    outline: none;
+}
+
+label{
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    width: 0%;
+    height: 2px;
+    background: var(--linear-grad);
+    transition: 0.3s;
+}
+
+input:focus ~ label{
+    width: 100%;
+}
+
+a{
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+    margin: 15px 0px;
+}
+
+a.forgot{
+    padding-bottom: 3px;
+    border-bottom: 2px solid #eee;
+}
+
+button{
+    border-radius: 20px;
+    border: 1px solid var(--grad-clr1);
+    background: var(--grad-clr2);
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.form-container button{
+    margin-top: 17px;
+    transition: 80ms ease-in;
+}
+
+.form-container button:hover{
+    background: #fff;
+    color: var(--grad-clr1);
+}
+
+.overlay-container{
+    position: absolute;
+    top: 0;
+    left: 60%;
+    width: 40%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.6s ease-in-out;
+    z-index: 9;
+}
+
+#overlayBtn{
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    top: 304px;
+    transform: translateX(-50%);
+    width: 143.67px;
+    height: 40px;
+    border: 1px solid #fff;
+    background: transparent;
+    border-radius: 20px;
+}
+
+.overlay{
+    position: relative;
+    background: var(--linear-grad);
+    color: #fff;
+    left: -150%;
+    height: 100%;
+    width: 250%;
+    transition: transform 0.6s ease-in-out;
+}
+
+.overlay-panel{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0px 40px;
+    text-align: center;
+    height: 100%;
+    width: 340px;
+    transition: 0.6s ease-in-out;
+}
+
+.overlay-left{
+    right: 60%;
+    transform: translateX(-12%);
+}
+
+.overlay-right{
+    right: 0;
+    transform: translateX(0%);
+}
+
+.overlay-panel h1{
+    color: #fff;
+}
+
+p{
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+    margin: 25px 0px 35px;
+}
+
+.overlay-panel button{
+    border: none;
+    background-color: transparent;
+}
+
+.right-panel-active .overlay-container{
+    transform: translateX(-150%);
+}
+
+.right-panel-active .overlay{
+    transform: translateX(50%);
+}
+
+.right-panel-active .overlay-left{
+    transform: translateX(25%);
+}
+
+.right-panel-active .overlay-right{
+    transform: translateX(35%);
+}
+
+.right-panel-active .sign-in-container{
+    transform: translateX(20%);
+    opacity: 0;
+}
+
+.right-panel-active .sign-up-container{
+    transform: translateX(66.7%);
+    opacity: 1;
+    z-index: 5;
+    animation: show 0.6s;
+}
+
+@keyframes show {
+    0%, 50% {
+        opacity: 0;
+        z-index: 1;
+    }
+    50.1%, 100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+.btnScaled{
+    animation: scaleBtn 0.6s;
+}
+
+@keyframes scaleBtn {
+    0%{
+        width: 143.67px;
+    }
+    50%{
+        width: 250px;
+    }
+    100%{
+        width: 143.67px;
+    }
+}
+
+.switch-register,
+.switch-login {
+    display: none;
+}
+
+@media only screen and (max-width: 650px) {
+    .container {
+        width: 100% !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        position: relative !important;
+        overflow: visible !important;
+        display: flex;
+        justify-content: center;
+        border-radius: 20px;
+    }
+    
+    /* Ẩn overlay container hoàn toàn */
+    .overlay-container {
+        display: none !important;
+    }
+    
+    /* Hiển thị cả 2 form container */
+    .form-container {
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        transform: none !important;
+        transition: none !important;
+        background: white !important;
+        z-index: 1 !important;
+        padding: 20px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* .sign-in-container::after,
+    .sign-up-container::after {
+        display: block !important;
+        margin-top: 16px !important;
+        font-size: 14px !important;
+        color: #666 !important;
+        text-align: center !important;
+        text-decoration: underline !important;
+        cursor: pointer !important;
+    } */
+
+    /* Mặc định hiển thị form sign-in */
+    .sign-in-container {
+        display: flex !important;
+        opacity: 1 !important;
+        height: 400px !important;
+    }
+    
+    /* Ẩn form sign-up ban đầu */
+    .sign-up-container {
+        display: none !important;
+        height: 600px !important;
+    }
+    
+    /* Khi container có class right-panel-active, hiển thị sign-up và ẩn sign-in */
+    .container.right-panel-active .sign-up-container {
+        display: flex !important;
+        opacity: 1 !important;
+    }
+    
+    .container.right-panel-active .sign-in-container {
+        display: none !important;
+    }
+    
+    /* Style cho form */
+    .form-container form {
+        background: white !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-direction: column !important;
+        padding: 0 !important;
+        height: auto !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+    
+    /* Style cho các element trong form */
+    .form-container h1 {
+        font-size: 24px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .social-container {
+        margin: 20px 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        gap: 10px !important;
+    }
+    
+    .social {
+        display: inline-flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 50% !important;
+        margin: 0 5px !important;
+    }
+    
+    .form-container span {
+        font-size: 14px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .infield {
+        width: 100% !important;
+        margin: 10px 0 !important;
+        position: relative !important;
+    }
+    
+    .infield input {
+        width: 100% !important;
+        padding: 12px 15px !important;
+        border: 1px solid #ddd !important;
+        border-radius: 5px !important;
+        font-size: 16px !important;
+        box-sizing: border-box !important;
+    }
+    
+    .infield_btn {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+    
+    .infield_btn input {
+        flex: 1 !important;
+    }
+    
+    .infield_btn .btn {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+        max-width: 50px !important;
+        max-height: 40px;
+    }
+
+    .btn_title{
+        display: none;
+    }
+    
+    .forgot {
+        margin: 10px 0 !important;
+        font-size: 14px !important;
+    }
+    
+    .form-container button {
+        width: 100% !important;
+        padding: 12px !important;
+        border: none !important;
+        border-radius: 5px !important;
+        font-size: 16px !important;
+        margin: 0 !important;
+        cursor: pointer !important;
+    }
+    
+    /* Thêm nút chuyển đổi giữa Login và Register */
+    .form-container::after {
+        content: attr(data-switch-text) !important;
+        display: block !important;
+        text-align: center !important;
+        margin-top: 20px !important;
+        font-size: 14px !important;
+        color: #666 !important;
+        cursor: pointer !important;
+        text-decoration: underline !important;
+    }
+    
+    /* .sign-in-container::after {
+        content: "Don't have an account? Sign Up" !important;
+    }
+    
+    .sign-up-container::after {
+        content: "Already have an account? Sign In" !important;
+    } */
+
+    .switch-register,
+    .switch-login{
+        display: block;
+        margin-top: 16px !important;
+        font-size: 14px !important;
+        color: #666 !important;
+        text-align: center !important;
+        text-decoration: underline !important;
+        cursor: pointer !important;
+    }
+}

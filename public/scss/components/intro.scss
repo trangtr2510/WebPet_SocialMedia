@@ -1,0 +1,128 @@
+.intro {
+  &__container {
+    padding-top: 5rem;
+    text-align: center;
+    
+    .section__subheader {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: $text-light;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .section__header {
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $text-dark;
+    }
+  }
+
+  &__grid {
+    margin-top: 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
+  }
+
+  &__card {
+    text-align: center;
+
+    .intro__image {
+      max-width: fit-content;
+      margin-inline: auto;
+      margin-bottom: 1rem;
+      padding: 2rem;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: contain;
+
+      img {
+        width: unset;
+        height: 75px;
+      }
+    }
+
+    h4 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: $text-dark;
+    }
+
+    p {
+      margin-bottom: 2rem;
+      color: $text-light;
+    }
+
+    a {
+      display: inline-block;
+      padding: 0.5rem 2rem;
+      border: 2px solid;
+      border-radius: 5rem;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    // Card-specific styles
+    &:nth-child(1) {
+      .intro__image {
+        background-image: url(../images/intro/intro-1-bg.png);
+      }
+
+      a {
+        color: #ffc737;
+        border-color: #ffc737;
+
+        &:hover {
+          color: $white;
+          background-color: #ffc737;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          transform: translateY(-5px);
+        }
+      }
+    }
+
+    &:nth-child(2) {
+      .intro__image {
+        background-image: url(../images/intro/intro-2-bg.png);
+      }
+
+      a {
+        color: #257ae7;
+        border-color: #257ae7;
+
+        &:hover {
+          color: $white;
+          background-color: #257ae7;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          transform: translateY(-5px);
+        }
+      }
+    }
+
+    &:nth-child(3) {
+      .intro__image {
+        background-image: url(../images/intro/intro-3-bg.png);
+      }
+
+      a {
+        color: #cba9b6;
+        border-color: #cba9b6;
+
+        &:hover {
+          color: $white;
+          background-color: #cba9b6;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          transform: translateY(-5px);
+        }
+      }
+    }
+  }
+}

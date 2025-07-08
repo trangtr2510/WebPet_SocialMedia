@@ -1,0 +1,12 @@
+{
+  "name": "websitepet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "watch": "sass --watch main.scss public/css/styles.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -1,0 +1,265 @@
+// .header {
+//     width: 100%;
+//     height: 100vh;
+//     background-image: url(../../../public/images/banner/header.png);
+//     background-size: cover;
+//     background-repeat: no-repeat;
+//     border-bottom-right-radius: 40px;
+//     &_category{
+//         height: 10rem;
+//     }
+
+//     &_wrapper_container {
+//         width: 100%;
+//         height: calc(100vh - 12rem);
+//         display: flex;
+//         align-items: center;
+//     }
+
+//     &_wrapper {
+//         width: 50%;
+//     }
+
+//     &_main_title {
+//         margin-bottom: 2rem;
+//         color: $primary_color_1;
+//     }
+
+//     &_p {
+//         margin-bottom: 4rem;
+//     }
+// }
+
+.header {
+    width: 100%;
+    height: 100vh;
+    background-image: url(../images/banner/header.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-bottom-right-radius: 40px;
+    position: relative;
+
+
+    &_category {
+        height: 8rem;
+        background: var(--white);
+    }
+
+    &_wrapper {
+        width: 50%;
+
+        &_container {
+            width: 100%;
+            height: calc(100vh - 8rem);
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    &_main_title {
+        margin-bottom: 2rem;
+        color: var(--primary-color-1);
+        font-size: 3.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    &_p {
+        margin-bottom: 4rem;
+        font-size: 1.1rem;
+        color: var(--text-color);
+    }
+
+    &_btns {
+        display: flex;
+        gap: 1.5rem;
+    }
+}
+
+/* Hamburger menu button - hidden by default */
+.hamburger_btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* Mobile menu sidebar */
+.mobile_menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100%;
+    background-color: white;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease;
+    z-index: 1001;
+    padding: 20px;
+    overflow-y: auto;
+
+    &.active {
+        left: 0;
+    }
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    &_logo>img {
+        height: 35px;
+        width: auto;
+    }
+}
+
+.close_btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.mobile_nav_list {
+    list-style: none;
+    margin-bottom: 30px;
+}
+
+.mobile_nav_item {
+    margin-bottom: 15px;
+}
+
+.mobile_nav_link {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 12px 0;
+    display: block;
+    border-bottom: 1px solid #f0f0f0;
+    transition: color 0.3s ease;
+}
+
+.mobile_nav_link:hover {
+    color: #007bff;
+}
+
+.mobile_search_box {
+    margin-bottom: 20px;
+}
+
+.mobile_search_input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+    font-size: 16px;
+}
+
+.mobile_auth_btns {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mobile_auth_btn {
+    padding: 12px;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.mobile_login {
+    background-color: #007bff;
+    color: white;
+}
+
+.mobile_register {
+    background-color: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+
+    &:hover {
+        background-color: #007bff;
+        color: white;
+    }
+}
+
+.mobile_login:hover {
+    background-color: #0056b3;
+}
+
+
+/* Overlay for mobile menu */
+.mobile_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+
+    &.active {
+        display: block;
+    }
+}
+
+
+// JavaScript will add the .sticky class when scrolling
+
+@media only screen and (max-width: 768px) {
+    .nav_left .nav_list,
+    .nav_right .search_box,
+    .nav_right .cart_btn {
+        display: none;
+    }
+
+    .hamburger_btn {
+        display: block;
+    }
+
+    .nav_container {
+        justify-content: space-between;
+    }
+
+    .nav_left {
+        gap: 15px;
+    }
+
+    .header {
+        width: 100%;
+        height: 120vh;
+        background-image: url(../images/banner/mobile_header.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        border-bottom-right-radius: 40px;
+
+        &_wrapper {
+            width: 100%;
+        }
+        &_category{
+            background-image: none;
+            height: 10rem;
+        }
+        &_btns{
+            display: flex;
+            & > .btn{
+                padding: 5px 10px;
+            }
+        }
+    }
+}

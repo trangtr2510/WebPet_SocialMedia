@@ -1,0 +1,458 @@
+// .nav{
+//     width: 100%;
+//     height: 10rem;
+//     &_category{
+//         background-color: $white;
+//     }
+//     &_container{
+//         width: 100%;
+//         height: 100%;
+//         display: flex;
+//         justify-content: space-between;
+//         align-items: center;
+//     }
+//     &_left{
+//         display: flex;
+//         align-items: center;
+//     }
+//     &_logo{
+//         margin-right: 3rem;
+//         img{
+//             max-width: 10rem;
+//         }
+//     }
+//     &_list{
+//         display: flex;
+//         list-style: none;
+//         align-items: center;
+//     }
+//     &_item{
+//         margin: 0rem 1.2rem;
+//     }
+//     &_link{
+//         text-decoration: none;
+//         font-weight: 600;
+//         color: $text;
+//     }
+// }
+
+:root {
+    --primary-color-1: #003459;
+    --primary-color-2: #00528C;
+    --secondary-color-1: #F7DBA7;
+    --secondary-color-2: #FCEED5;
+    --text-color: #667479;
+    --white: #ffffff;
+    --light-gray: #faf9f9;
+    --border-color: #e0e0e0;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Styles */
+.nav {
+    width: 100%;
+    height: 8rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+
+    &.sticky {
+        position: fixed;
+        top: 0;
+        left: 0;
+        box-shadow: var(--shadow);
+        background: rgba(255, 255, 255, 0.98);
+    }
+
+    &_category {
+        background-color: var(--white);
+    }
+
+    &_container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &_left {
+        display: flex;
+        align-items: center;
+    }
+
+    &_logo {
+        margin-right: 3rem;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+
+        img {
+            max-width: 10rem;
+            height: auto;
+        }
+    }
+
+    &_list {
+        display: flex;
+        list-style: none;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    &_item {
+        position: relative;
+    }
+
+    &_link {
+        text-decoration: none;
+        font-weight: 600;
+        color: var(--text-color);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+
+        &:hover {
+            color: var(--primary-color-1);
+        }
+    }
+
+    &_right {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+}
+
+/* Search Box */
+.search_box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search_input {
+    padding: 0.8rem 1.2rem;
+    padding-right: 3rem;
+    border: 2px solid var(--border-color);
+    border-radius: 25px;
+    outline: none;
+    font-size: 0.9rem;
+    width: 250px;
+    transition: all 0.3s ease;
+    background: var(--white);
+
+    &:focus {
+        border-color: var(--primary-color-1);
+        box-shadow: 0 0 0 3px rgba(0, 52, 89, 0.1);
+        width: 300px;
+    }
+}
+
+.search_icon {
+    position: absolute;
+    right: 12px;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: var(--primary-color-1);
+    }
+}
+
+/* Icon Buttons */
+.icon_btn {
+    position: relative;
+    width: 45px;
+    height: 45px;
+    border: none;
+    background: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+        background: var(--primary-color-1);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    i {
+        font-size: 1.2rem;
+    }
+}
+
+/* Cart Badge */
+.cart_badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff4757;
+    color: var(--white);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+/* Account Dropdown */
+.account_dropdown {
+    position: relative;
+}
+
+.notify_box {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    padding: 1.5rem;
+    width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        right: 15px;
+        width: 16px;
+        height: 16px;
+        background: var(--white);
+        transform: rotate(45deg);
+        box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.1);
+    }
+}
+
+// User Info Section với Avatar
+.user_info {
+    display: flex;
+    align-items: center;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+
+    .user_avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #e2e8f0;
+        margin-right: 1rem;
+
+        // Fallback cho trường hợp không có avatar
+        &.placeholder {
+            background: #f7fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #718096;
+            font-weight: 600;
+        }
+    }
+
+    .user_name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin: 0;
+        line-height: 1.4;
+    }
+}
+
+// Auth Buttons - Đơn giản và sạch sẽ
+.auth_btn {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    i {
+        font-size: 1rem;
+        width: 16px;
+        text-align: center;
+    }
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    &.login {
+        background: var(--primary-color-1);
+        color: var(--white);
+        border: 2px solid var(--primary-color-1);
+        &:hover {
+            background: var(--white);
+            color: var(--primary-color-1);
+            transform: translateY(-1px);
+        }
+    }
+    &.register {
+        background: transparent;
+        color: var(--primary-color-1);
+        border: 2px solid var(--primary-color-1);
+        &:hover {
+            background: var(--primary-color-1);
+            color: var(--white);
+        }
+    }
+
+    // Đơn hàng cá nhân
+    &.myOrder {
+        background: #f7fafc;
+        color: #4a5568;
+        border: 1px solid #e2e8f0;
+
+        &:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+    }
+
+    // Tài khoản
+    &.myAccount {
+        background: #f0fff4;
+        color: #38a169;
+        border: 1px solid #c6f6d5;
+
+        &:hover {
+            background: #c6f6d5;
+            border-color: #9ae6b4;
+        }
+    }
+
+    // Đăng xuất
+    &.logout {
+        background: #fff5f5;
+        color: #e53e3e;
+        border: 1px solid #fed7d7;
+
+        &:hover {
+            background: #fed7d7;
+            border-color: #feb2b2;
+        }
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .user_info {
+        padding: 1rem;
+
+        .user_avatar {
+            width: 42px;
+            height: 42px;
+        }
+
+        .user_name {
+            font-size: 1rem;
+        }
+    }
+
+    .auth_btn {
+        padding: 0.9rem 1rem;
+        font-size: 0.9rem;
+
+        i {
+            font-size: 0.9rem;
+        }
+    }
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+    .user_info {
+        background: #2d3748;
+        border-color: #4a5568;
+
+        .user_avatar {
+            border-color: #4a5568;
+
+            &.placeholder {
+                background: #4a5568;
+                color: #a0aec0;
+            }
+        }
+
+        .user_name {
+            color: #f7fafc;
+        }
+    }
+
+    .auth_btn {
+        &.myOrder {
+            background: #4a5568;
+            color: #e2e8f0;
+            border-color: #718096;
+
+            &:hover {
+                background: #718096;
+            }
+        }
+
+        &.myAccount {
+            background: #22543d;
+            color: #68d391;
+            border-color: #38a169;
+
+            &:hover {
+                background: #38a169;
+            }
+        }
+
+        &.logout {
+            background: #742a2a;
+            color: #fc8181;
+            border-color: #e53e3e;
+
+            &:hover {
+                background: #e53e3e;
+            }
+        }
+    }
+}
