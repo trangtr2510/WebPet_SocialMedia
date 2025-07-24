@@ -17,7 +17,20 @@ $product = new Product($conn);
 $productImages = new ProductImage($conn);
 
 // Lấy tất cả sản phẩm
-$products = $product->getAllProduct();
+// $products = $product->getAllProduct();
+// Lấy 8 sản phẩm mới nhất có category là 'pet'
+$products = $product->getLatestProductsByParentCategory(1, 8);
+// Lấy 8 sản phẩm mới nhất có category là 'product'
+$productSP = $product->getLatestProductsByParentCategory(8, 8);
+
+$active_products = array_filter($products, function($product) {
+    return isset($product['is_active']) && $product['is_active'] == 1;
+});
+
+$active_productsSP = array_filter($productSP, function($productSP) {
+    return isset($productSP['is_active']) && $productSP['is_active'] == 1;
+});
+
 ?>
 
 <!DOCTYPE html>
@@ -46,13 +59,21 @@ $products = $product->getAllProduct();
                     <ul class="nav_list">
                         <li class="nav_item"><a href="./index.php" class="nav_link">Home</a></li>
                         <li class="nav_item">
-                            <a href="./views/pages/category.html" class="nav_link">Category</a>
+                            <a href="./views/pages/category.php" class="nav_link">Category</a>
+                            <div class="category_dropdown">
+                                <a href="./views/pages/category.php?category_id=1" class="category_dropdown_item">
+                                    <i class="fa-solid fa-paw"></i> Thú cưng
+                                </a>
+                                <a href="./views/pages/category.php?category_id=8" class="category_dropdown_item">
+                                    <i class="fa-solid fa-box"></i> Sản phẩm
+                                </a>
+                            </div>
                         </li>
                         <li class="nav_item">
-                            <a href="#" class="nav_link">Social Media</a>
+                            <a href="./views/pages/social_media.php" class="nav_link">Social Media</a>
                         </li>
                         <li class="nav_item"><a href="#" class="nav_link">About</a></li>
-                        <li class="nav_item"><a href="#" class="nav_link">Contact</a></li>
+                        <li class="nav_item"><a href="./views/pages/contact.php" class="nav_link">Contact</a></li>
                     </ul>
                 </div>
                 <div class="nav_right">
@@ -68,7 +89,7 @@ $products = $product->getAllProduct();
                             <i class="fa-solid fa-user"></i>
                             
                         </button>
-                        <div class="notify_box">
+                        <div class="notify_box_login_register">
                             <?php if ($is_logged_in): ?>
                                 <div class="user_info">
                                     <img src="./public/uploads/avatar/<?php echo htmlspecialchars($img); ?>" alt="Avatar" class="user_avatar">
@@ -80,7 +101,7 @@ $products = $product->getAllProduct();
                                     <?php endif; ?></p>
                                 </div>
                                 <?php if ($is_logged_in && ($userModel->isAdmin($_SESSION) || $userModel->isEmployee($_SESSION))): ?>
-                                    <a href="./views/pages/admin_dashboard.php" class="auth_btn myOrder">
+                                    <a href="./views/admin/dashboard.php" class="auth_btn myOrder">
                                         <i class="fa-solid fa-gear"></i>
                                         Quản lý
                                     </a>
@@ -119,8 +140,8 @@ $products = $product->getAllProduct();
                 <h1 class="header_main_title">Một người bạn nữa<br>Vui hơn hàng nghìn lần!</h1>
                 <p class="header_p">Có một thú cưng có nghĩa là bạn sẽ có nhiều niềm vui hơn, một người bạn mới,<br>một người hạnh phúc sẽ luôn bên bạn để cùng vui chơi.<br>Chúng tôi có nhiều loại thú cưng khác nhau có thể đáp ứng nhu cầu của bạn!</p>
                 <div class="header_btns">
-                    <a href="#" class="btn btn_outlined">Video Giới thiệu <i class="fa-regular fa-circle-play"></i></a>
-                    <a href="#" class="btn btn_bg">Khám Phá Ngay</a>
+                    <a href="https://www.youtube.com/watch?v=CxWWkNpKFvk" class="btn btn_outlined">Video Giới thiệu <i class="fa-regular fa-circle-play"></i></a>
+                    <a href="./views/pages/category.php" class="btn btn_bg">Khám Phá Ngay</a>
                 </div>
             </div>
         </div>
@@ -151,7 +172,14 @@ $products = $product->getAllProduct();
                 <a href="./index.php" class="mobile_nav_link">Home</a>
             </li>
             <li class="mobile_nav_item">
-                <a href="./views/pages/category.html" class="mobile_nav_link">Category</a>
+                <a href="./views/pages/category.html" class="mobile_nav_link">
+                    Category
+                    <i class="fa-solid fa-chevron-down" style="float: right; transition: transform 0.3s ease;"></i>
+                </a>
+                <div class="mobile_category_dropdown" id="mobileCategoryDropdown">
+                    <a href="#" class="mobile_category_item">Thú cưng</a>
+                    <a href="#" class="mobile_category_item">Sản phẩm</a>
+                </div>
             </li>
             <li class="mobile_nav_item">
                 <a href="#" class="mobile_nav_link">Social Media</a>
@@ -165,10 +193,10 @@ $products = $product->getAllProduct();
         </ul>
 
         <!-- Mobile Auth Buttons -->
-        <div class="mobile_auth_btns">
+        <!-- <div class="mobile_auth_btns">
             <a href="#" class="mobile_auth_btn mobile_login">Đăng nhập</a>
             <a href="#" class="mobile_auth_btn mobile_register">Đăng ký</a>
-        </div>
+        </div> -->
 
         <!-- Mobile Cart Info -->
         <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; text-align: center;">
@@ -189,7 +217,7 @@ $products = $product->getAllProduct();
                     <p>
                         Nhà thú cưng là không gian riêng tư, ấm áp giúp các bé thú cưng nghỉ ngơi và cảm thấy an toàn.
                     </p>
-                    <a href="#">Xem thêm</a>
+                    <a href="./views/pages/category.php?category_id=5">Xem thêm</a>
                 </div>
                 <div class="intro__card">
                     <div class="intro__image">
@@ -199,7 +227,7 @@ $products = $product->getAllProduct();
                     <p>
                         Thức ăn hạt cho thú cưng tiện lợi, giàu dinh dưỡng, giúp bé phát triển khỏe mạnh mỗi ngày.
                     </p>
-                    <a href="#">Xem thêm</a>
+                    <a href="./views/pages/category.php?category_id=6">Xem thêm</a>
                 </div>
                 <div class="intro__card">
                     <div class="intro__image">
@@ -209,7 +237,7 @@ $products = $product->getAllProduct();
                     <p>
                         Mỹ phẩm cho thú cưng giúp chăm sóc da lông mềm mượt, sạch sẽ và luôn thơm tho tự nhiên.
                     </p>
-                    <a href="#">Xem thêm</a>
+                    <a href="./views/pages/category.php?category_id=7">Xem thêm</a>
                 </div>
             </div>
         </section>
@@ -221,12 +249,12 @@ $products = $product->getAllProduct();
                         <h2 class="section_header_h2">Hãy xem một số thú cưng của chúng tôi.</h2>
                     </div>
                     <div class="section_header_right">
-                        <a href="#" class="btn_outlined btn">Xem thêm <i class="fa-solid fa-hand-point-right"></i></a>
+                        <a href="./views/pages/category.php" class="btn_outlined btn">Xem thêm <i class="fa-solid fa-hand-point-right"></i></a>
                     </div>
                 </div>
                 <div class="row">
-                    <?php if (!empty($products)): ?>
-                        <?php foreach ($products as $productItem): ?>
+                    <?php if (!empty($active_products)): ?>
+                        <?php foreach ($active_products as $productItem): ?>
                             <?php
                             // Lấy ảnh đầu tiên của sản phẩm
                             $images = $productImages->getImagesByProduct($productItem['product_id']);
@@ -235,10 +263,10 @@ $products = $product->getAllProduct();
                             $gender = $productImages->getImagesByProduct($productItem['product_id']);
                             $mainGender = !empty($gender) ? $gender[0]['gender'] : 'Đực';
                             ?>
-                            
+                        
                             <div class="column">
                                 <div class="card">
-                                    <img src="./public/uploads/pet/<?php echo htmlspecialchars($mainImage); ?>" alt="<?php echo htmlspecialchars($productItem['product_name']); ?>">
+                                    <img src="./public/uploads/product/<?php echo htmlspecialchars($mainImage); ?>" alt="<?php echo htmlspecialchars($productItem['product_name']); ?>">
                                     <i class="fa-solid fa-eye eye-icon" onclick="viewProduct(<?php echo $productItem['product_id']; ?>)"></i>
                                     <div class="card_body">
                                         <h3 class="card_body_title"><?php echo htmlspecialchars($productItem['product_name'] . ' - ' . $productItem['color']); ?></h3>
@@ -259,7 +287,7 @@ $products = $product->getAllProduct();
                         <?php endforeach; ?>
                     <?php else: ?>
                         <div class="no-products">
-                            <p>Hiện tại chưa có sản phẩm nào.</p>
+                            <p>Hiện tại chưa có sản phẩm pet nào.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -388,9 +416,9 @@ $products = $product->getAllProduct();
                             <h1 class="banner_title"><span class="banner_title_big_text">Một người bạn nữa<br>Vui hơn hàng nghìn lần!</h1>
                             <p class="banner_p">Có một thú cưng có nghĩa là bạn sẽ có nhiều niềm vui hơn, một người bạn mới,<br>một người hạnh phúc sẽ luôn bên bạn để cùng vui chơi.</p>
                             <div class="banner_btns">
-                                <a href="$" class="btn btn_outlined">Video Giới thiệu <i
+                                <a href="https://www.youtube.com/watch?v=CxWWkNpKFvk" class="btn btn_outlined">Video Giới thiệu <i
                                         class="fa-regular fa-circle-play"></i></a>
-                                <a href="$" class="btn btn_bg">Khám Phá Ngay</a>
+                                <a href="./views/pages/category.php" class="btn btn_bg">Khám Phá Ngay</a>
                             </div>
                         </div>
                     </div>
@@ -405,10 +433,57 @@ $products = $product->getAllProduct();
                         <h2 class="section_header_h2_2">Sản phẩm của chúng tôi</h2>
                     </div>
                     <div class="section_header_right">
-                        <a href="#" class="btn_outlined btn">Xem thêm <i class="fa-solid fa-hand-point-right"></i></a>
+                        <a href="./views/pages/category.php" class="btn_outlined btn">Xem thêm <i class="fa-solid fa-hand-point-right"></i></a>
                     </div>
                 </div>
                 <div class="row">
+                    <?php if (!empty($active_productsSP)): ?>
+                        <?php foreach ($active_productsSP as $productItem): ?>
+                            <?php
+                            // Lấy ảnh đầu tiên của sản phẩm
+                            $images = $productImages->getImagesByProduct($productItem['product_id']);
+                            $mainImage = !empty($images) ? $images[0]['image_url'] : 'default.png';
+                            ?>
+                        
+                            <div class="column">
+                                <div class="card">
+                                    <img src="./public/uploads/product/<?php echo htmlspecialchars($mainImage); ?>" alt="<?php echo htmlspecialchars($productItem['product_name']); ?>">
+                                    <i class="fa-solid fa-eye eye-icon" onclick="viewProduct(<?php echo $productItem['product_id']; ?>)"></i>
+                                    <div class="card_body">
+                                        <h3 class="card_body_title"><?php echo htmlspecialchars($productItem['product_name'] . ' - ' . $productItem['color']); ?></h3>
+                                        <div class="card_body_details">
+                                            <div class="card_body_details_gender">
+                                                Weight: <?php echo htmlspecialchars($productItem['weight'] ?? 'N/A'); ?> kg
+                                            </div>
+                                            <div class="card_body_details_age">
+                                                Material: <?php echo htmlspecialchars($productItem['material'] ?? 'N/A'); ?>
+                                            </div>
+                                        </div>
+                                        <p class="card_body_price">
+                                            <?php echo number_format($productItem['price'], 0, ',', '.'); ?> VND
+                                        </p>
+                                        <?php if ($productItem['stock_quantity'] > 0): ?>
+                                            <div class="card_body_gift" onclick="addToCart(<?php echo $productItem['product_id']; ?>, <?php echo $productItem['stock_quantity']; ?>)">
+                                                <img src="./public/uploads/icon/trolley.png" alt="" class="card_body_gift_icon">
+                                                <p class="card_body_gift_p">Add to cart</p>
+                                            </div>
+                                            <?php else: ?>
+                                            <div class="card_body_gift disabled">
+                                                <img src="./public/uploads/icon/trolley.png" alt="" class="card_body_gift_icon">
+                                                <p class="card_body_gift_p">Out of Stock</p>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="no-products">
+                            <p>Hiện tại chưa có sản phẩm nào.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <!-- <div class="row">
                     <div class="column">
                         <div class="card">
                             <img src="./public/uploads/product/product3.png" alt="">
@@ -553,7 +628,7 @@ $products = $product->getAllProduct();
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </section>
         <section class="section__container service__container" id="service">
@@ -605,9 +680,9 @@ $products = $product->getAllProduct();
                             </h1>
                             <p class="banner_2_p">Nhận nuôi một con thú cưng và cho nó một ngôi nhà, nó sẽ yêu bạn một cách vô điều kiện.</p>
                             <div class="banner_2_btns">
-                                <a href="$" class="btn btn_outlined">Video Giới thiệu <i
+                                <a href="https://www.youtube.com/watch?v=CxWWkNpKFvk" class="btn btn_outlined">Video Giới thiệu <i
                                         class="fa-regular fa-circle-play"></i></a>
-                                <a href="$" class="btn btn_bg">Khám Phá Ngay</a>
+                                <a href="./views/pages/category.php" class="btn btn_bg">Khám Phá Ngay</a>
                             </div>
                         </div>
                         <img src="./public/images/banner/banner-3-img.png" alt="" class="banner_2_img">
@@ -623,7 +698,7 @@ $products = $product->getAllProduct();
                         <h2 class="section_header_h2_2">Kiến thức hữu ích về thú cưng</h2>
                     </div>
                     <div class="section_header_right">
-                        <a href="#" class="btn_outlined btn">Xem thêm <i class="fa-solid fa-hand-point-right"></i></a>
+                        <a href="./views/pages/category.php" class="btn_outlined btn">Xem thêm <i class="fa-solid fa-hand-point-right"></i></a>
                     </div>
                 </div>
                 <div class="row">
@@ -757,5 +832,6 @@ $products = $product->getAllProduct();
     </footer>
     
     <script src="./public/js/index.js"></script>
+    <script src="./public/js/addToCart.js"></script>
 </body>
 </html>

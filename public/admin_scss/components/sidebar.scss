@@ -1,0 +1,509 @@
+// Variables for better maintainability
+$sidebar-width: 280px;
+$sidebar-collapsed-width: 67px;
+$sidebar-mobile-height: 67px;
+$border-radius: 8px;
+$transition-duration: 300ms;
+$transition-timing: ease-in-out;
+$padding-base: 12px 16px;
+$gap-base: 12px;
+
+// Color variables (you can customize these)
+:root {
+    --sidebar-bg: #ffffff;
+    --sidebar-border: #e5e7eb;
+    --sidebar-text: #374151;
+    --sidebar-text-secondary: #6b7280;
+    --sidebar-hover: #f3f4f6;
+    --sidebar-active: #eff6ff;
+    --sidebar-active-text: #003459;
+    --sidebar-active-bg: #dbeafe;
+    --sidebar-icon: #6b7280;
+    --sidebar-icon-active: #003459;
+}
+
+// Mixins for reusable styles
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-align-center {
+    display: flex;
+    align-items: center;
+}
+
+@mixin hover-effect {
+    &:hover {
+        background-color: var(--sidebar-hover);
+    }
+}
+
+@mixin button-reset {
+    border: none;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+}
+
+// Main sidebar styles
+.sidebar {
+    box-sizing: border-box;
+    height: 100vh;
+    width: $sidebar-width;
+    padding: 20px 16px;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    position: sticky;
+    top: 0;
+    align-self: start;
+    transition: width $transition-duration $transition-timing;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+    // Collapsed state
+    &.close {
+        padding: 20px 8px;
+        width: $sidebar-collapsed-width;
+    }
+
+    // List styles
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    // Toggle section (first list item)
+    .toggle-section {
+        margin-bottom: 32px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--sidebar-border);
+
+        .toggle-container {
+            @include flex-align-center;
+            justify-content: space-between;
+            flex-direction: column;
+            margin-bottom: -25px;
+            gap: 8px;
+            position: relative;
+        }
+
+        .collapsed-avatar {
+            opacity: 0;
+            transition: opacity $transition-duration $transition-timing;
+            pointer-events: none;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .user-avatar-collapsed {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid var(--sidebar-border);
+            }
+        }
+
+        .logo {
+            @include flex-align-center;
+            gap: 12px;
+            opacity: 1;
+            transition: opacity $transition-duration $transition-timing;
+
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid var(--sidebar-border);
+            }
+
+            .user-details {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+
+                .user-name {
+                    font-weight: 600;
+                    font-size: 16px;
+                    color: var(--sidebar-text);
+                    line-height: 1.2;
+                }
+
+                .user-role {
+                    font-size: 12px;
+                    color: var(--sidebar-text-secondary);
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+            }
+        }
+    }
+
+    // Toggle button
+    .toggle-btn {
+        position: absolute;
+        right: -8px; // Adjust this to align with the edge
+        top: 50%;
+        padding: 8px;
+        border-radius: $border-radius;
+        @include button-reset;
+        @include hover-effect;
+        @include flex-center;
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        transition: all 200ms ease;
+
+        i {
+            transition: transform 150ms ease;
+            color: var(--sidebar-icon);
+            font-size: 16px;
+        }
+
+        // &:hover i {
+        //     color: var(--sidebar-text);
+        // }
+    }
+
+    // Navigation items
+    >ul>li:not(.toggle-section) {
+        margin-bottom: 4px;
+    }
+
+    // Active state
+    li.active a {
+        color: var(--sidebar-active-text);
+        background-color: var(--sidebar-active-bg);
+        font-weight: 600;
+
+        i {
+            color: var(--sidebar-icon-active);
+        }
+    }
+
+    // Common link and button styles
+    a,
+    .dropdown-btn {
+        border-radius: $border-radius;
+        padding: $padding-base;
+        text-decoration: none;
+        color: var(--sidebar-text);
+        @include flex-align-center;
+        gap: $gap-base;
+        transition: all 200ms ease;
+        @include hover-effect;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.5;
+        min-height: 40px;
+        position: relative;
+
+        // Active indicator
+        &::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 16px;
+            background-color: var(--sidebar-active-text);
+            border-radius: 0 3px 3px 0;
+            opacity: 0;
+            transition: opacity 200ms ease;
+        }
+    }
+
+    // Active state indicator
+    li.active a::before {
+        opacity: 1;
+    }
+
+    // Dropdown button specific styles
+    .dropdown-btn {
+        width: 100%;
+        text-align: left;
+        @include button-reset;
+
+        i:last-child {
+            margin-left: auto;
+            transition: transform 200ms ease;
+            font-size: 12px;
+        }
+    }
+
+    // Icon styles (FontAwesome icons)
+    i {
+        flex-shrink: 0;
+        color: var(--sidebar-icon);
+        transition: color 200ms ease;
+        min-width: 20px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    // Flexible text spans
+    a span,
+    .dropdown-btn span {
+        flex-grow: 1;
+        opacity: 1;
+        transition: opacity $transition-duration $transition-timing;
+    }
+
+    // Sub-menu animations
+    .sub-menu {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows $transition-duration $transition-timing;
+        margin-left: 32px;
+        border-left: 1px solid var(--sidebar-border);
+
+        >div {
+            overflow: hidden;
+        }
+
+        &.show {
+            grid-template-rows: 1fr;
+        }
+
+        a {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--sidebar-text-secondary);
+            min-height: 32px;
+            position: relative;
+
+            &::before {
+                left: -33px;
+            }
+
+            // &:hover {
+            //     color: var(--sidebar-text);
+            //     background-color: var(--sidebar-hover);
+            // }
+        }
+
+        li {
+            position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: -1px;
+                top: 0;
+                bottom: 0;
+                width: 1px;
+                background-color: var(--sidebar-border);
+            }
+        }
+    }
+
+    // Collapsed state adjustments
+    &.close {
+
+        // Show collapsed avatar next to toggle button
+        .toggle-section {
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            border-bottom: none;
+            margin-bottom: 0px;
+
+            .toggle-container {
+                justify-content: flex-start;
+                margin-bottom: 0;
+                gap: 8px;
+            }
+
+            .collapsed-avatar {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .logo {
+                opacity: 0;
+                pointer-events: none;
+                height: 0;
+                overflow: hidden;
+            }
+        }
+
+        // Hide text spans
+        a span,
+        .dropdown-btn span {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        // Keep toggle button visible and functional
+        .toggle-btn {
+            position: static;
+            transform: none;
+            order: 2; 
+            opacity: 1;
+            pointer-events: auto;
+
+            i {
+                color: var(--sidebar-icon);
+            }
+        }
+
+        .sub-menu {
+            display: none;
+        }
+
+        // Remove active indicator in collapsed state
+        a::before {
+            opacity: 0;
+        }
+
+        // Tooltip on hover for collapsed state
+        a,
+        .dropdown-btn {
+            position: relative;
+        }
+
+        // Tooltip for collapsed avatar
+        .collapsed-avatar {
+            order: 2;
+            position: relative;
+        }
+    }
+}
+
+// Keyframes for tooltip animation
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) translateX(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
+}
+
+// Rotation utility for dropdown arrows
+.sidebar .dropdown-btn.rotate i:last-child {
+    transform: rotate(180deg);
+}
+
+// Icon rotation class for toggle button
+.icon_rotate {
+    transition: transform 150ms ease;
+}
+
+.active_child {
+    color: var(--sidebar-active-text);
+    border-radius: $border-radius;
+    background-color: var(--sidebar-active-bg);
+}
+
+.active_child a {
+    color: white;
+    font-weight: bold;
+}
+
+
+// Mobile responsive styles
+@media (max-width: 768px) {
+    body {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        height: $sidebar-mobile-height;
+        width: 100%;
+        border-right: none;
+        border-top: 1px solid var(--sidebar-border);
+        padding: 0;
+        position: fixed;
+        top: unset;
+        bottom: 0;
+        z-index: 1000;
+
+        >ul {
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-auto-columns: $sidebar-mobile-height;
+            grid-auto-flow: column;
+            align-items: center;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        ul li {
+            height: 100%;
+        }
+
+        ul a,
+        ul .dropdown-btn {
+            width: $sidebar-mobile-height;
+            height: $sidebar-mobile-height;
+            padding: 0;
+            border-radius: 0;
+            @include flex-center;
+        }
+
+        ul li span,
+        ul li:first-child,
+        .dropdown-btn i:last-child {
+            display: none;
+        }
+
+        ul li .sub-menu.show {
+            position: fixed;
+            bottom: $sidebar-mobile-height;
+            margin-left: 0rem;
+            left: 0;
+            box-sizing: border-box;
+            height: $sidebar-mobile-height;
+            width: 100%;
+            background-color: var(--sidebar-hover);
+            border-top: 1px solid var(--sidebar-border);
+            @include flex-center;
+            z-index: 1001;
+
+            >div {
+                overflow-x: auto;
+                @include flex-align-center;
+                height: 100%;
+            }
+
+            li {
+                display: inline-flex;
+                height: 100%;
+            }
+
+            a {
+                box-sizing: border-box;
+                padding: 16px;
+                width: auto;
+                height: 100%;
+                @include flex-center;
+                white-space: nowrap;
+                min-width: 80px;
+            }
+        }
+
+        &.close {
+            width: 100%;
+            padding: 0;
+        }
+    }
+}

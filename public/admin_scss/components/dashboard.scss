@@ -1,0 +1,798 @@
+:root {
+    --clr-primary: #ffffff;
+    --clr-secondary: #f5f5f5;
+    --clr-light-green: #a9dfd8;
+    --clr-gray-200: #333333;
+    --clr-gray-300: #555555;
+    --clr-gray-400: #777777;
+    --clr-gray-500: #999999;
+    --clr-gray-800: #dddddd;
+    --clr-yellow-400: #fcb859;
+    --clr-yellow-500: #feb95a;
+    --clr-pink: #f2c8ed;
+    --clr-light-blue: #20aef3;
+    --clr-black: #000;
+    --clr-white: #fff;
+    --clr-orange: #eebd62;
+    --clr-blue: #59abe2;
+    --clr-purple: #a066b7;
+    --clr-red: #df6658;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.25rem;
+    background-color: var(--clr-primary);
+}
+
+.open-btn {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--clr-gray-300);
+}
+
+@media screen and (min-width: 768px) {
+    .open-btn {
+        display: none;
+    }
+}
+
+.search-container {
+    flex-grow: 1;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    max-width: 31.25rem;
+}
+
+.search-input {
+    background-color: var(--clr-secondary);
+    color: var(--clr-gray-300);
+    padding: 0.625rem;
+    border-radius: 0.3125rem;
+    border: none;
+    flex-grow: 1;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--clr-gray-300);
+
+    svg {
+        font-size: 1.25rem;
+    }
+
+    img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+    }
+}
+
+.dashboard {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: var(--clr-primary);
+}
+
+.card {
+    display: grid;
+    gap: 1rem;
+
+    header h2 {
+        font-size: 1.25rem;
+        margin-bottom: 0.25rem;
+        color: var(--clr-gray-200);
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .card {
+        grid-template-columns: 3fr 2fr;
+    }
+}
+
+.card header p,
+.top-products table th {
+    font-size: 0.875rem;
+    color: var(--clr-gray-400);
+    margin-bottom: 1rem;
+}
+
+.sales-details,
+.top-products-details {
+    background-color: var(--clr-secondary);
+    padding: 1rem;
+    border-radius: 0.625rem;
+}
+
+.sales-details>div {
+    display: grid;
+    gap: 1rem;
+}
+
+@media screen and (min-width: 480px) {
+    .sales-details div {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .sales-details div {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.sales-detail {
+    background-color: var(--clr-primary);
+    padding: 0.5rem;
+    border-radius: 0.625rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    svg {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--clr-gray-400);
+    }
+
+    h3 {
+        font-size: 2rem;
+        color: var(--clr-gray-200);
+        margin-bottom: 0.25rem;
+    }
+
+    p {
+        font-size: 0.875rem;
+        color: var(--clr-gray-400);
+    }
+
+    span {
+        font-size: 0.74rem;
+        color: var(--clr-gray-500);
+    }
+}
+
+@media screen and (min-width: 1280px) {
+    .sales-detail {
+        padding: 1rem;
+    }
+}
+
+.sales-total span {
+    color: var(--clr-yellow-500);
+}
+
+.sales-orders span {
+    color: var(--clr-light-green);
+}
+
+.sales-products span {
+    color: var(--clr-pink);
+}
+
+.sales-customers span {
+    color: var(--clr-light-blue);
+}
+
+.chart {
+    background-color: var(--clr-secondary);
+    padding: 1rem;
+    border-radius: 0.625rem;
+}
+
+.visitors-chart{
+    max-width: 600px;
+    height: auto;
+}
+
+/* Main Chart Container */
+.chart.level-chart {
+    position: relative;
+    width: 90%;
+    padding: 1.25rem;
+    background: var(--clr-secondary);
+    border-radius: 0.625rem;
+    box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+}
+
+/* Chart Header */
+.level-chart header {
+    margin-bottom: 1rem;
+}
+
+/* Chart with Axes Layout */
+.chart-with-axis {
+    display: flex;
+    width: 100%;
+    height: 12.5rem; /* 200px */
+    margin-top: 1.25rem;
+}
+
+/* Y-Axis (Revenue) Styling */
+.y-axis {
+    width: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-right: 0.625rem;
+    border-right: 1px solid var(--clr-gray-200);
+    margin-right: 0.9375rem;
+}
+
+.y-axis-label {
+    font-size: 0.6875rem;
+    color: var(--clr-gray-500);
+    text-align: right;
+}
+
+/* Main Chart Area */
+.level-chart .chart-container {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 100%;
+    gap: 0.5rem;
+}
+
+/* Bar Container */
+.level-chart .chart-container .bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+    position: relative;
+    min-width: 1.25rem;
+}
+
+/* Bars */
+.level-chart .chart-container .bar {
+    width: 100%;
+    min-height: 1px;
+    background-color: var(--clr-light-green);
+    border-radius: 0.25rem 0.25rem 0 0;
+    transition: height 0.3s ease;
+    margin-top: auto;
+}
+
+/* Bar Labels (Months) */
+.level-chart .chart-container .bar-label {
+    font-size: 0.75rem;
+    color: var(--clr-gray-500);
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+/* Tooltip */
+.chart-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.3125rem 0.625rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 100;
+    margin-bottom: 0.3125rem;
+    pointer-events: none;
+}
+
+/* Legend */
+.level-chart .labels {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.25rem;
+    gap: 0.9375rem;
+}
+
+.level-chart .labels .label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--clr-gray-500);
+}
+
+.level-chart .labels .label div {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background-color: var(--clr-gray-300);
+}
+
+.level-chart .labels .label div.active {
+    background-color: var(--clr-light-green);
+}
+
+.level-chart .labels .divider {
+    width: 1px;
+    height: 1.25rem;
+    background: var(--clr-gray-200);
+}
+
+// .level-chart header {
+//     margin-bottom: 1rem;
+// }
+
+// .level-chart .chart-container {
+//     display: flex;
+//     justify-content: space-between;
+//     margin-bottom: 0.625rem;
+
+//     div {
+//         position: relative;
+//         width: 8.5%;
+//         max-width: 1rem;
+//         height: 7.5rem;
+//         background-color: var(--clr-gray-800);
+//         border-radius: 0.25rem 0.25rem 0 0;
+//     }
+
+//     div::before {
+//         content: "";
+//         position: absolute;
+//         bottom: 0;
+//         left: 0;
+//         width: 100%;
+//         height: 50%;
+//         background-color: var(--clr-light-green);
+//         border-radius: 0.25rem 0.25rem 0 0;
+//     }
+
+//     :nth-child(1)::before {
+//         height: 50%;
+//     }
+
+//     :nth-child(2)::before {
+//         height: 60%;
+//     }
+
+//     :nth-child(3)::before {
+//         height: 45%;
+//     }
+
+//     :nth-child(4)::before {
+//         height: 20%;
+//     }
+
+//     :nth-child(5)::before {
+//         height: 45%;
+//     }
+
+//     :nth-child(6)::before {
+//         height: 56%;
+//     }
+// }
+
+// .level-chart .labels {
+//     display: flex;
+//     justify-content: space-between;
+//     font-size: 0.75rem;
+//     color: var(--clr-gray-500);
+
+//     .label {
+//         display: flex;
+//         gap: 0.75rem;
+//         align-items: center;
+
+//         div {
+//             width: 0.5rem;
+//             height: 0.5rem;
+//             border-radius: 50%;
+//             background-color: var(--clr-gray-800);
+//         }
+
+//         div.active {
+//             background-color: var(--clr-light-green);
+//         }
+//     }
+// }
+
+.divider {
+    width: 1px;
+    background-color: var(--clr-gray-500);
+}
+
+/* top products */
+.top-product-details {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 0.625rem 0;
+    text-align: left;
+}
+
+th {
+    font-weight: 400;
+    color: var(--clr-gray-400);
+}
+
+tr td:nth-child(2) {
+    width: 8.75rem;
+}
+
+@media screen and (min-width: 768px) {
+    tr td:nth-child(2) {
+        width: 11.25rem;
+    }
+}
+
+td {
+    font-size: 0.75rem;
+    border-top: 1px solid var(--clr-gray-800);
+    color: var(--clr-gray-300);
+}
+
+@media screen and (min-width: 1280px) {
+    td {
+        font-size: 0.875rem;
+    }
+}
+
+.range {
+    height: 0.125rem;
+    background-color: var(--clr-gray-800);
+    width: 80%;
+}
+
+.range>div {
+    height: 100%;
+}
+
+.range-1 {
+    background-color: var(--clr-yellow-500);
+    width: 80%;
+}
+
+.range-2 {
+    background-color: var(--clr-light-green);
+    width: 65%;
+}
+
+.range-3 {
+    background-color: var(--clr-light-blue);
+    width: 50%;
+}
+
+.range-4 {
+    background-color: var(--clr-pink);
+    width: 30%;
+}
+
+.sales-volume {
+    font-weight: 500;
+    border-radius: 0.25rem;
+    padding: 0.3125rem 0.75rem;
+    border: 1px solid;
+    width: max-content;
+}
+
+.sv-1 {
+    color: var(--clr-yellow-500);
+    border-color: var(--clr-yellow-500);
+    background-color: rgba(252, 184, 89, 0.12);
+}
+
+.sv-2 {
+    color: var(--clr-light-green);
+    border-color: var(--clr-light-green);
+    background-color: rgba(169, 223, 216, 0.12);
+}
+
+.sv-3 {
+    color: var(--clr-light-blue);
+    border-color: var(--clr-light-blue);
+    background-color: rgba(32, 174, 243, 0.12);
+}
+
+.sv-4 {
+    color: var(--clr-pink);
+    border-color: var(--clr-pink);
+    background-color: rgba(242, 200, 237, 0.12);
+}
+
+.fulfillment-chart {
+    font-size: 0.75rem;
+
+    .chart-container {
+        width: 100%;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--clr-gray-500);
+    }
+
+    .labels {
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+    }
+
+    .label {
+        margin-bottom: 0.25rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        color: var(--clr-gray-500);
+
+        div {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background-color: var(--clr-gray-800);
+        }
+
+        div.last-month {
+            background-color: var(--clr-light-green);
+        }
+
+        div.this-month {
+            background-color: var(--clr-pink);
+        }
+    }
+}
+
+/* earnings */
+@media screen and (min-width: 768px) {
+    .earnings {
+        grid-template-columns: 2fr 3fr;
+    }
+}
+
+// .earnings-chart {
+//     strong {
+//         color: var(--clr-light-green);
+//     }
+
+//     .profit {
+//         margin-top: 0.25rem;
+//         margin-bottom: 1rem;
+//         font-size: 0.725rem;
+//         color: var(--clr-gray-500);
+//     }
+
+//     .chart-container {
+//         position: relative;
+//         width: max-content;
+//         margin: 0 auto;
+//     }
+
+//     .chart-wrapper {
+//         position: relative;
+//         width: 200px;
+//         height: 100px;
+//         overflow: hidden;
+//     }
+
+//     .path,
+//     .path-fill {
+//         border-radius: 50%;
+//         width: 200px;
+//         height: 200px;
+//     }
+
+//     .path {
+//         background-color: var(--clr-gray-800);
+//     }
+
+//     .path-fill {
+//         background-color: var(--clr-light-green);
+//         position: absolute;
+//         top: 0;
+//         clip: rect(100px, 200px, 200px, 0);
+//         transform: rotate(144deg);
+//     }
+
+//     .mask {
+//         background-color: var(--clr-secondary);
+//         position: absolute;
+//         width: 140px;
+//         height: 140px;
+//         top: 30px;
+//         left: 30px;
+//         border-radius: 50%;
+//     }
+
+//     .dial-container {
+//         width: 110px;
+//         height: 4px;
+//         position: absolute;
+//         bottom: 0;
+//         left: -10px;
+//         transform-origin: 100% 100%;
+//         transform: translateY(-100%) rotate(144deg);
+//     }
+
+//     .dial {
+//         width: 60px;
+//         height: 100%;
+//         background-color: var(--clr-light-green);
+//     }
+
+//     span {
+//         position: absolute;
+//         top: 50%;
+//         left: 50%;
+//         transform: translate(-50%, 50%);
+//         font-size: 1.5rem;
+//         font-weight: bold;
+//         color: var(--clr-gray-200);
+//     }
+
+//     @media screen and (min-width: 1280px) {
+//         .chart-wrapper {
+//             width: 400px;
+//             height: 200px;
+//         }
+
+//         .path,
+//         .path-fill {
+//             width: 400px;
+//             height: 400px;
+//         }
+
+//         .path-fill {
+//             clip: rect(200px, 400px, 400px, 0);
+//         }
+
+//         .mask {
+//             width: 300px;
+//             height: 300px;
+//             top: 50px;
+//             left: 50px;
+//         }
+
+//         .dial-container {
+//             width: 210px;
+//         }
+
+//         .dial {
+//             width: 70px;
+//         }
+
+//         span {
+//             font-size: 2.5rem;
+//         }
+//     }
+// }
+
+.orders-chart {
+  .chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .pie-chart {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      var(--clr-orange) 0deg 90deg,        /* Pending: 25% = 90deg */
+      var(--clr-blue) 90deg 162deg,        /* Processing: 20% = 72deg */
+      var(--clr-purple) 162deg 216deg,     /* Shipped: 15% = 54deg */
+      var(--clr-light-green) 216deg 324deg, /* Delivered: 30% = 108deg */
+      var(--clr-red) 324deg 360deg         /* Cancelled: 10% = 36deg */
+    );
+  }
+  
+  .pie-chart-slice {
+    display: none; /* Không cần các slice riêng lẻ nữa */
+  }
+  
+  .pie-chart-center {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    background: var(--clr-secondary);
+    border-radius: 50%;
+    top: 15%;
+    left: 15%;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--clr-primary);
+  }
+
+  .legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+  
+  .color.pending { background: var(--clr-orange); }
+  .color.processing { background: var(--clr-blue); }
+  .color.shipped { background: var(--clr-purple); }
+  .color.delivered { background: var(--clr-light-green); }
+  .color.cancelled { background: var(--clr-red); }
+  
+  @media screen and (min-width: 768px) {
+    .chart-container {
+      flex-direction: row;
+      justify-content: center;
+    }
+   
+    .pie-chart {
+      width: 250px;
+      height: 250px;
+    }
+  }
+}
+
+.statistics-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 20px;
+}
+
+.stats-select {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: white;
+}
+
+.date-selection {
+    display: flex;
+    gap: 10px;
+}
+
+.excel-btn {
+    padding: 8px 16px;
+    background-color: #1d6f42;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.excel-btn:hover {
+    background-color: #165834;
+}
+
+.excel-btn svg {
+    margin-right: 5px;
+}
+
+.visitors-chart{
+    display: none;
+}

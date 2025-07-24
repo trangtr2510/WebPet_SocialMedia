@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: ../../views/auth/login_register.php?message=Email đã tồn tại!");
         exit();
     } elseif($userModel-> usernameExists($username)){
-        header("Location: ../../views/auth/login_register.php?message=Email đã tồn tại!&username=" . urlencode($username));
+        header("Location: ../../views/auth/login_register.php?message=Username đã tồn tại!&username=" . urlencode($username));
         exit();
     }
     else {

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Management Interface</title>
+    <link rel="stylesheet" href="../../../fontawesome-free-6.4.2-web/css/all.min.css">
+    <link rel="stylesheet" href="../../../public/css/admin/admin.css">
+    <link rel="stylesheet" href="../../../app/controllers/LogoutController.php">
+</head>
+
+<body>
+
+    <nav id="sidebar" class="sidebar">
+        <ul>
+            <!-- Toggle Button at Top -->
+            <li class="toggle-section">
+                <div class="toggle-container">
+                    <button onclick="toggleSidebar()" id="toggle-btn" class="toggle-btn" data-tooltip="Toggle Menu">
+                        <i class="fas fa-angle-double-left icon_rotate"></i>
+                    </button>
+                    <div class="collapsed-avatar">
+                        <img src="../../../public/uploads/avatar/changgchan25_1751796135.jpg" alt="User Avatar"
+                            class="user-avatar-collapsed">
+                    </div>
+                </div>
+                <div class="logo">
+                    <img src="../../../public/uploads/avatar/changgchan25_1751796135.jpg" alt="User Avatar"
+                        class="user-avatar">
+                    <div class="user-details">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                </div>
+            </li>
+            <!-- Navigation Items -->
+            <li>
+                <a href="#" data-tooltip="Dashboard">
+                    <i class="fas fa-chart-line icon_nav"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-tooltip="Danh mục">
+                    <i class="fa-solid fa-list icon_nav"></i>
+                    <span>Danh mục</span>
+                </a>
+            </li>
+            <li>
+                <button onclick="toggleSubMenu(this)" class="dropdown-btn" data-tooltip="Shop">
+                    <i class="fa-solid fa-paw icon_nav"></i>
+                    <span>Shop</span>
+                    <i class="fas fa-chevron-down icon_nav"></i>
+                </button>
+                <ul class="sub-menu">
+                    <div>
+                        <li><a href="#">Thú cưng</a></li>
+                        <li><a href="#">Sản phẩm</a></li>
+                        <li><a href="#">Phụ kiện</a></li>
+                    </div>
+                </ul>
+            </li>
+            <li>
+                <button onclick="toggleSubMenu(this)" class="dropdown-btn" data-tooltip="Diễn đàn">
+                    <i class="fa-solid fa-share-nodes icon_nav"></i>
+                    <span>Diễn đàn</span>
+                    <i class="fas fa-chevron-down icon_nav"></i>
+                </button>
+                <ul class="sub-menu">
+                    <div>
+                        <li><a href="#" class="active">Bài viết</a></li>
+                        <li><a href="#">Bình luận</a></li>
+                        <li><a href="#">Tin nhắn</a></li>
+                    </div>
+                </ul>
+            </li>
+            <li>
+                <button onclick="toggleSubMenu(this)" class="dropdown-btn" data-tooltip="Quản lý tài khoản">
+                    <i class="fa-solid fa-user-group icon_nav"></i>
+                    <span>Quản lý tài khoản</span>
+                    <i class="fas fa-chevron-down icon_nav"></i>
+                </button>
+                <ul class="sub-menu">
+                    <div>
+                        <li><a href="#">Khách hàng</a></li>
+                        <li><a href="#">Nhân viên</a></li>
+                    </div>
+                </ul>
+            </li>
+            <li>
+                <a href="#" data-tooltip="Profile">
+                    <i class="fas fa-user icon_nav"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="pm-container">
+        <h2 style="margin: 1rem 0rem; color: #003459;">Post Manager</h2>
+        <!-- Tab Navigation -->
+        <div class="pm-tab-navigation">
+            <button class="pm-tab-nav-item pm-active" onclick="pmShowTab('pm-table-view')">Chờ xét duyệt</button>
+            <button class="pm-tab-nav-item" onclick="pmShowTab('pm-community-view')">Đã xét duyệt</button>
+        </div>
+
+        <!-- Table View Tab -->
+        <div id="pm-table-view" class="pm-tab-content pm-active">
+            <div class="pm-community-header">
+                <span class="pm-breadcrumb">Post</span> / Chờ xét duyệt
+            </div>
+
+            <div class="pm-posts-filters">
+                <div class="pm-search-box">
+                    <input type="text" placeholder="Type any keyword to search">
+                </div>
+                <div>
+                    <span>Filter By</span>
+                    <select class="pm-filter-select">
+                        <option>Select From</option>
+                    </select>
+                </div>
+                <div>
+                    <span>Select To</span>
+                    <select class="pm-filter-select">
+                        <option>Select To</option>
+                    </select>
+                </div>
+                <button class="pm-apply-btn">Apply</button>
+            </div>
+
+            <div class="pm-table-controls">
+                <div class="pm-bulk-select">
+                    <label>
+                        <input type="checkbox" id="pm-select-all" onchange="pmToggleSelectAll()">
+                        Check all
+                    </label>
+                </div>
+                <div class="pm-bulk-actions">
+                    <span>With selected:</span>
+                    <button class="pm-edit-btn">✏️ Edit</button>
+                    <button class="pm-delete-btn">🗑️ Delete</button>
+                    <button class="pm-export-btn">📤 Export</button>
+                </div>
+            </div>
+
+            <table class="pm-data-table">
+                <thead>
+                    <tr>
+                        <th class="pm-checkbox"></th>
+                        <th class="pm-post-id">post_id</th>
+                        <th>Ảnh</th>
+                        <th>title</th>
+                        <th>content</th>
+                        <th>post_type</th>
+                        <th class="pm-status">status</th>
+                        <th class="pm-like-count">like_count</th>
+                        <th>author_id</th>
+                        <th class="pm-dates">created_at</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Community Posts Tab -->
+        <div id="pm-community-view" class="pm-tab-content">
+            <div class="pm-community-header">
+                <span class="pm-breadcrumb">Post</span> / Đã xét duyệt
+            </div>
+
+            <div class="pm-posts-tabs">
+                <div class="pm-posts-tab pm-active">New Posts</div>
+                <div class="pm-posts-tab">Reviews</div>
+            </div>
+
+            <div class="pm-posts-filters">
+                <div class="pm-search-box">
+                    <input type="text" placeholder="Type any keyword to search">
+                </div>
+                <div>
+                    <span>Filter By</span>
+                    <select class="pm-filter-select">
+                        <option>Select From</option>
+                    </select>
+                </div>
+                <div>
+                    <span>Select To</span>
+                    <select class="pm-filter-select">
+                        <option>Select To</option>
+                    </select>
+                </div>
+                <button class="pm-apply-btn">Apply</button>
+            </div>
+
+            <div class="pm-table-controls">
+                <div class="pm-bulk-select">
+                    <label>
+                        <input type="checkbox" id="pm-select-all" onchange="pmToggleSelectAll()">
+                        Check all
+                    </label>
+                </div>
+                <div class="pm-bulk-actions">
+                    <span>With selected:</span>
+                    <button class="pm-edit-btn">✏️ Edit</button>
+                    <button class="pm-delete-btn">🗑️ Delete</button>
+                    <button class="pm-export-btn">📤 Export</button>
+                </div>
+            </div>
+
+            <table class="pm-data-table">
+                <thead>
+                    <tr>
+                        <th class="pm-checkbox"></th>
+                        <th class="pm-post-id">post_id</th>
+                        <th>Ảnh</th>
+                        <th>title</th>
+                        <th>content</th>
+                        <th>post_type</th>
+                        <th class="pm-status">status</th>
+                        <th class="pm-like-count">like_count</th>
+                        <th>author_id</th>
+                        <th class="pm-dates">created_at</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pm-checkbox-cell"><input type="checkbox" class="pm-row-checkbox"></td>
+                        <td class="pm-post-id">1</td>
+                        <!-- Ảnh -->
+                        <td class="pm-image-cell">
+                            <img src="https://via.placeholder.com/80x80/FFB6C1/FFFFFF?text=Product" alt="Product"
+                                class="pm-post-image" style="width:40px;height:40px;object-fit:cover;">
+                        </td>
+                        <td>Testit</td>
+                        <td>hello worlddd</td>
+                        <td>chờ xác nhận</td>
+                        <td><span class="pm-null-text">news</span></td>
+                        <td class="pm-like-count">0</td>
+                        <td>1</td>
+                        <td class="pm-dates">2025-07-12 19:04:25</td>
+                        <!-- Action -->
+                        <td class="pm-actions">
+                            <div class="pm-post-actions">
+                                <button class="pm-action-btn pm-approve">Approve</button>
+                                <button class="pm-action-btn pm-delete">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../../../public/js/admin.js"></script>
+    <script src="../../../public/js/product_manager.js"></script>
+
+    <script>
+        function pmShowTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.pm-tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('pm-active');
+            });
+
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.pm-tab-nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('pm-active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('pm-active');
+
+            // Add active class to clicked nav item
+            event.target.classList.add('pm-active');
+        }
+
+        function pmToggleSelectAll() {
+            const selectAll = document.getElementById('pm-select-all');
+            const checkboxes = document.querySelectorAll('.pm-row-checkbox');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+        }
+
+        // Add event listeners for row checkboxes
+        document.querySelectorAll('.pm-row-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const selectAll = document.getElementById('pm-select-all');
+                const checkboxes = document.querySelectorAll('.pm-row-checkbox');
+                const checkedBoxes = document.querySelectorAll('.pm-row-checkbox:checked');
+
+                if (checkedBoxes.length === checkboxes.length) {
+                    selectAll.checked = true;
+                    selectAll.indeterminate = false;
+                } else if (checkedBoxes.length > 0) {
+                    selectAll.checked = false;
+                    selectAll.indeterminate = true;
+                } else {
+                    selectAll.checked = false;
+                    selectAll.indeterminate = false;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

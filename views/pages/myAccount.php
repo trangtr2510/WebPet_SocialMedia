@@ -1,8 +1,20 @@
 <?php
-// Bao gồm controller
+// THÊM DEBUG INFO VÀO ĐẦU FILE
+error_log("=== REQUEST DEBUG INFO ===");
+error_log("REQUEST_METHOD: " . $_SERVER['REQUEST_METHOD']);
+error_log("REQUEST_URI: " . $_SERVER['REQUEST_URI']);
+error_log("GET params: " . print_r($_GET, true));
+error_log("POST params: " . print_r($_POST, true));
+error_log("============================");
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 include_once(__DIR__ . '/../../app/controllers/myAccountController.php');
 include_once(__DIR__ .'/../../config/config.php');
 include_once(__DIR__ .'/../../app/models/User.php');
+include_once(__DIR__ . '/../../app/controllers/OrderControllerCustomer.php');
 
 $is_logged_in = isset($_SESSION['user_id']);
 $username = $is_logged_in ? $_SESSION['username'] : '';
@@ -13,8 +25,17 @@ $userModel = new User($conn);
 
 // Kiểm tra xem người dùng đã đăng nhập chưa
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../auth/login_register.php');
+    header('Location: ../../auth/login_register.php');
     exit();
+}
+
+// Lấy danh sách đơn hàng của người dùng
+$orderController = new OrderControllerCustomer($conn);
+$userOrders = [];
+if ($is_logged_in) {
+    // Sử dụng order model để lấy đơn hàng của user hiện tại
+    $orderModel = new Order($conn);
+    $userOrders = $orderModel->getOrdersWithDetails($_SESSION['user_id']);
 }
 
 // Lấy thông tin người dùng
@@ -31,6 +52,32 @@ $nameParts = explode(' ', $userProfile['full_name'] ?? '');
 $firstName = $nameParts[0] ?? '';
 $lastName = isset($nameParts[1]) ? implode(' ', array_slice($nameParts, 1)) : '';
 
+// XỬ LÝ CÁC REQUEST (POST VÀ GET)
+$action = $_GET['action'] ?? $_POST['action'] ?? '';
+$orderAction = $_GET['order_action'] ?? $_POST['order_action'] ?? ''; // Thêm GET order_action
+
+// Xử lý order_action từ cả GET và POST
+if (!empty($orderAction)) {
+    // Đảm bảo response là JSON
+    header('Content-Type: application/json');
+
+    switch ($orderAction) {
+        case 'customer_cancel_order':
+        case 'customer_confirm_received':
+        case 'customer_get_order_detail':
+            $orderController->handleRequest();
+            break;
+
+        default:
+            echo json_encode([
+                'success' => false,
+                'message' => 'Order action không hợp lệ: ' . $orderAction
+            ]);
+    }
+    exit();
+}
+
+// Xử lý các POST request khác
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Đảm bảo response là JSON
     header('Content-Type: application/json');
@@ -49,6 +96,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 try {
                     $result = $controller->updateProfile($data);
+                    echo json_encode($result);
+                } catch (Exception $e) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Lỗi hệ thống: ' . $e->getMessage()
+                    ]);
+                }
+                exit();
+                break;
+
+            case 'update_address':
+                $data = [
+                    'address' => $_POST['address'] ?? ''
+                ];
+                
+                try {
+                    $result = $controller->updateAddress($data);
                     echo json_encode($result);
                 } catch (Exception $e) {
                     echo json_encode([
@@ -78,6 +142,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 exit();
                 break;
+
+            case 'change_password':
+                $data = [
+                    'current_password' => $_POST['current_password'] ?? '',
+                    'new_password' => $_POST['new_password'] ?? '',
+                    'confirm_password' => $_POST['confirm_password'] ?? ''
+                ];
+                
+                try {
+                    $result = $controller->changePassword($data);
+                    echo json_encode($result);
+                } catch (Exception $e) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Lỗi hệ thống: ' . $e->getMessage()
+                    ]);
+                }
+                exit();
+                break;
                 
             default:
                 echo json_encode([
@@ -97,6 +180,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
 
+// Function để format trạng thái đơn hàng
+function getStatusText($status) {
+    switch ($status) {
+        case 'pending': return 'Chờ xử lý';
+        case 'processing': return 'Đang xử lý';
+        case 'shipped': return 'Đang giao hàng';
+        case 'delivered': return 'Đã giao hàng';
+        case 'cancelled': return 'Đã hủy';
+        default: return ucfirst($status);
+    }
+}
+
+function getStatusClass($status) {
+    switch ($status) {
+        case 'pending': return 'pending';
+        case 'processing': return 'processing';
+        case 'shipped': return 'shipped';
+        case 'delivered': return 'delivered';
+        case 'cancelled': return 'cancelled';
+        default: return 'pending';
+    }
+}
+
+// Thêm vào đầu file PHP (trước HTML)
+$ordersPerPage = 4;
+$currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$totalOrders = count($userOrders);
+$totalPages = ceil($totalOrders / $ordersPerPage);
+$offset = ($currentPage - 1) * $ordersPerPage;
+$ordersToShow = array_slice($userOrders, $offset, $ordersPerPage);
+
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +229,6 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
 
 <body>
     <header class="header header_category">
-        
         <nav class="nav nav_category">
             <div class="container nav_container">
                 <button class="hamburger_btn" type="button">
@@ -128,18 +241,26 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
                     <ul class="nav_list">
                         <li class="nav_item"><a href="../../index.php" class="nav_link">Home</a></li>
                         <li class="nav_item">
-                            <a href="./views/pages/category.html" class="nav_link">Category</a>
+                            <a href="./category.php" class="nav_link">Category</a>
+                            <div class="category_dropdown">
+                                <a href="./category.php?category_id=1" class="category_dropdown_item">
+                                    <i class="fa-solid fa-paw"></i> Thú cưng
+                                </a>
+                                <a href="./category.php?category_id=8" class="category_dropdown_item">
+                                    <i class="fa-solid fa-box"></i> Sản phẩm
+                                </a>
+                            </div>
                         </li>
                         <li class="nav_item">
-                            <a href="#" class="nav_link">Social Media</a>
+                            <a href="./social_media.php" class="nav_link">Social Media</a>
                         </li>
                         <li class="nav_item"><a href="#" class="nav_link">About</a></li>
-                        <li class="nav_item"><a href="#" class="nav_link">Contact</a></li>
+                        <li class="nav_item"><a href="./contact.php" class="nav_link">Contact</a></li>
                     </ul>
                 </div>
                 <div class="nav_right">
                     <!-- Search Box -->
-                    <div class="search_box">
+                    <div class="search_box" style = "display: none;">
                         <input type="text" class="search_input" placeholder="Tìm kiếm sản phẩm...">
                         <i class="fa-solid fa-search search_icon"></i>
                     </div>
@@ -150,7 +271,7 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
                             <i class="fa-solid fa-user"></i>
                             
                         </button>
-                        <div class="notify_box">
+                        <div class="notify_box_login_register">
                             <?php if ($is_logged_in): ?>
                                 <div class="user_info">
                                     <img src="../../public/uploads/avatar/<?php echo htmlspecialchars($img); ?>" alt="Avatar" class="user_avatar">
@@ -162,21 +283,21 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
                                     <?php endif; ?></p>
                                 </div>
                                 <?php if ($is_logged_in && ($userModel->isAdmin($_SESSION) || $userModel->isEmployee($_SESSION))): ?>
-                                    <a href="./views/pages/admin_dashboard.php" class="auth_btn myOrder">
+                                    <a href="../../views/admin/dashboard.php" class="auth_btn myOrder">
                                         <i class="fa-solid fa-gear"></i>
                                         Quản lý
                                     </a>
-                                <?php else: ?>
-                                    <a href="./views/pages/orders.php" class="auth_btn myOrder" style='display: none;'>
-                                        <i class="fa-solid fa-shopping-bag"></i>
-                                        Đơn hàng cá nhân
-                                    </a>
-                                <?php endif; ?>
-                                <a href="./views/pages/myAccount.php" class="auth_btn myAccount">
+                                    <?php else: ?>
+                                        <a href="./myAccount.php?tab=my-orders" class="auth_btn myOrder">
+                                            <i class="fa-solid fa-shopping-bag"></i>
+                                            Đơn hàng cá nhân
+                                        </a>
+                                    <?php endif; ?>
+                                <a href="./myAccount.php" class="auth_btn myAccount">
                                     <i class="fa-solid fa-user-cog"></i>
                                     Tài khoản
                                 </a>
-                                <a href="./app/controllers/LogoutController.php" class="auth_btn logout">
+                                <a href="../../app/controllers/LogoutController.php" class="auth_btn logout">
                                     <i class="fa-solid fa-sign-out-alt"></i>
                                     Đăng xuất
                                 </a>
@@ -222,7 +343,14 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
                 <a href="../../index.php" class="mobile_nav_link">Home</a>
             </li>
             <li class="mobile_nav_item">
-                <a href="../../views/pages/category.html" class="mobile_nav_link">Category</a>
+                <a href="../../views/pages/category.html" class="mobile_nav_link">
+                    Category
+                    <i class="fa-solid fa-chevron-down" style="float: right; transition: transform 0.3s ease;"></i>
+                </a>
+                <div class="mobile_category_dropdown" id="mobileCategoryDropdown">
+                    <a href="#" class="mobile_category_item">Thú cưng</a>
+                    <a href="#" class="mobile_category_item">Sản phẩm</a>
+                </div>
             </li>
             <li class="mobile_nav_item">
                 <a href="#" class="mobile_nav_link">Social Media</a>
@@ -236,10 +364,10 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
         </ul>
 
         <!-- Mobile Auth Buttons -->
-        <div class="mobile_auth_btns">
+        <!-- <div class="mobile_auth_btns">
             <a href="#" class="mobile_auth_btn mobile_login">Đăng nhập</a>
             <a href="#" class="mobile_auth_btn mobile_register">Đăng ký</a>
-        </div>
+        </div> -->
 
         <!-- Mobile Cart Info -->
         <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; text-align: center;">
@@ -343,7 +471,7 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
                                         </select>
                                     </div>
                                     
-                                    <button type="submit" class="update-btn">Update Changes</button>
+                                    <button type="submit" class="update-btn">Lưu thay đổi</button>
                                 </form>
                             </div>
                         </div>
@@ -351,137 +479,197 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
                         <!-- My Orders Tab -->
                         <div class="tab-content <?php echo ($activeTab === 'my-orders') ? 'active' : ''; ?>" id="my-orders">
                             <div class="orders-section">
-                                <h2>My Orders</h2>
+                                <h2>Đơn hàng của tôi</h2>
                                 
                                 <!-- Order Search -->
                                 <div class="order-search">
-                                    <input type="text" class="search-order-input" placeholder="Search orders...">
+                                    <input type="text" class="search-order-input" placeholder="Tìm kiếm đơn hàng..." id="orderSearchInput">
                                     <i class="fa-solid fa-search search-order-icon"></i>
                                 </div>
                                 
-                                <div class="orders-list">
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <span class="order-id">#12345</span>
-                                            <span class="order-date">Jan 15, 2024</span>
-                                            <span class="order-status pending">Pending</span>
+                                <div class="orders-list" id="ordersList">
+                                    <?php if (empty($userOrders)): ?>
+                                        <div class="no-orders">
+                                            <p>Bạn chưa có đơn hàng nào</p>
                                         </div>
-                                        <div class="order-details">
-                                            <div class="order-info">
-                                                <p>Dog Food Premium - 2kg</p>
-                                                <p class="order-total">$45.99</p>
+                                    <?php else: ?>
+                                        <?php foreach ($ordersToShow as $order): ?>
+                                            <div class="order-item" data-order-number="<?php echo htmlspecialchars($order['order_number']); ?>">
+                                                <div class="order-header">
+                                                    <span class="order-id">#<?php echo htmlspecialchars($order['order_number']); ?></span>
+                                                    <span class="order-date"><?php echo date('M d, Y', strtotime($order['order_date'])); ?></span>
+                                                    <span class="order-status <?php echo getStatusClass($order['status']); ?>">
+                                                        <?php echo getStatusText($order['status']); ?>
+                                                    </span>
+                                                </div>
+                                                <div class="order-details">
+                                                    <div class="order-info">
+                                                        <p><?php echo isset($order['total_items']) ? $order['total_items'] : '0'; ?> sản phẩm</p>
+                                                        <p class="order-total">$<?php echo number_format($order['total_amount'], 2); ?></p>
+                                                        <?php if (!empty($order['notes'])): ?>
+                                                            <p class="order-notes"><?php echo htmlspecialchars($order['notes']); ?></p>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                    <div class="order-actions">
+                                                        <!-- Nút Detail cho tất cả đơn hàng -->
+                                                        <button class="order-btn detail-btn" onclick="viewOrderDetail(<?php echo $order['order_id']; ?>)">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                            Chi tiết
+                                                        </button>
+                                                        
+                                                        <?php if ($order['status'] === 'pending'): ?>
+                                                            <!-- Nút Hủy đơn hàng cho trạng thái pending -->
+                                                            <button class="order-btn cancel-btn" onclick="cancelOrder(<?php echo $order['order_id']; ?>)">
+                                                                <i class="fa-solid fa-times"></i>
+                                                                Hủy đơn hàng
+                                                            </button>
+                                                        <?php elseif ($order['status'] === 'shipped'): ?>
+                                                            <!-- Nút Đã nhận cho trạng thái shipped -->
+                                                            <button class="order-btn received-btn" onclick="confirmReceived(<?php echo $order['order_id']; ?>)">
+                                                                <i class="fa-solid fa-check"></i>
+                                                                Đã nhận hàng
+                                                            </button>
+                                                        <?php elseif ($order['status'] === 'delivered'): ?>
+                                                            <!-- Nút Đánh giá cho đơn hàng đã giao -->
+                                                            <button class="order-btn review-btn" onclick="reviewOrder(<?php echo $order['order_id']; ?>)">
+                                                                <i class="fa-solid fa-star"></i>
+                                                                Đánh giá
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="order-actions">
-                                                <button class="order-btn cancel-btn">
-                                                    <i class="fa-solid fa-times"></i>
-                                                    Cancel Order
-                                                </button>
-                                                <button class="order-btn pay-btn">
-                                                    <i class="fa-solid fa-credit-card"></i>
-                                                    Pay Now
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <span class="order-id">#12344</span>
-                                            <span class="order-date">Jan 10, 2024</span>
-                                            <span class="order-status delivered">Delivered</span>
-                                        </div>
-                                        <div class="order-details">
-                                            <div class="order-info">
-                                                <p>Cat Toy Set</p>
-                                                <p class="order-total">$23.50</p>
-                                            </div>
-                                            <div class="order-actions">
-                                                <button class="order-btn reorder-btn">
-                                                    <i class="fa-solid fa-redo"></i>
-                                                    Re-order
-                                                </button>
-                                                <button class="order-btn review-btn">
-                                                    <i class="fa-solid fa-star"></i>
-                                                    Review
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </div>
+                                
+                                <!-- Pagination -->
+                                <?php if ($totalPages > 1): ?>
+                                    <div class="pagination-container">
+                                        <div class="pagination">
+                                            <!-- Previous button -->
+                                            <?php if ($currentPage > 1): ?>
+                                                <a href="?page=<?php echo ($currentPage - 1); ?>" class="pagination-btn prev-btn">
+                                                    <i class="fa-solid fa-chevron-left"></i>
+                                                    Trước
+                                                </a>
+                                            <?php endif; ?>
+                                            
+                                            <!-- Page numbers -->
+                                            <?php
+                                            $startPage = max(1, $currentPage - 2);
+                                            $endPage = min($totalPages, $currentPage + 2);
+                                            ?>
+                                            
+                                            <?php if ($startPage > 1): ?>
+                                                <a href="?page=1" class="pagination-btn">1</a>
+                                                <?php if ($startPage > 2): ?>
+                                                    <span class="pagination-dots">...</span>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                            
+                                            <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                                <a href="?page=<?php echo $i; ?>" 
+                                                class="pagination-btn <?php echo ($i == $currentPage) ? 'active' : ''; ?>">
+                                                    <?php echo $i; ?>
+                                                </a>
+                                            <?php endfor; ?>
+                                            
+                                            <?php if ($endPage < $totalPages): ?>
+                                                <?php if ($endPage < $totalPages - 1): ?>
+                                                    <span class="pagination-dots">...</span>
+                                                <?php endif; ?>
+                                                <a href="?page=<?php echo $totalPages; ?>" class="pagination-btn"><?php echo $totalPages; ?></a>
+                                            <?php endif; ?>
+                                            
+                                            <!-- Next button -->
+                                            <?php if ($currentPage < $totalPages): ?>
+                                                <a href="?page=<?php echo ($currentPage + 1); ?>" class="pagination-btn next-btn">
+                                                    Sau
+                                                    <i class="fa-solid fa-chevron-right"></i>
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
+                                        
+                                        <!-- Page info -->
+                                        <div class="page-info">
+                                            Hiển thị <?php echo (($currentPage - 1) * $ordersPerPage + 1); ?> - 
+                                            <?php echo min($currentPage * $ordersPerPage, $totalOrders); ?> 
+                                            trong tổng số <?php echo $totalOrders; ?> đơn hàng
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
-                        <!-- Manage Address Tab -->
-                        <div class="tab-content" id="manage-address">
+                        <!-- Address Management Tab -->
+                        <div class="tab-content <?php echo ($activeTab === 'manage-address') ? 'active' : ''; ?>" id="manage-address">
                             <div class="address-section">
-                                <h2>Manage Address</h2>
-                                <button class="add-address-btn" onclick="openAddressModal()">
-                                    <i class="fa-solid fa-plus"></i>
-                                    Add New Address
-                                </button>
-                                <div class="address-list">
-                                    <div class="address-item">
-                                        <div class="address-header">
-                                            <span class="address-type">Home</span>
-                                            <span class="default-badge">Default</span>
-                                        </div>
-                                        <div class="address-details">
-                                            <p>Bessie Cooper</p>
-                                            <p>123 Main Street, Apt 4B</p>
-                                            <p>New York, NY 10001</p>
-                                            <p>+0123 456 789</p>
-                                        </div>
-                                        <div class="address-actions">
-                                            <button class="edit-btn">Edit</button>
-                                            <button class="delete-btn">Delete</button>
+                                <h2>Address Information</h2>
+                                <p class="section-description">Manage your shipping address information</p>
+                                
+                                <form class="address-form" id="addressForm">
+                                    <div class="form-group">
+                                        <label for="address">Full Address *</label>
+                                        <textarea id="address" name="address" rows="4" placeholder="Enter your complete address (Street, District, City, Province)" required><?php echo htmlspecialchars($userProfile['address'] ?? ''); ?></textarea>
+                                        <small class="form-hint">Please provide your complete address including street, district, city, and province</small>
+                                    </div>
+                                    
+                                    <div class="address-preview">
+                                        <h3>Current Address:</h3>
+                                        <div class="current-address">
+                                            <?php if (!empty($userProfile['address'])): ?>
+                                                <p><?php echo nl2br(htmlspecialchars($userProfile['address'])); ?></p>
+                                            <?php else: ?>
+                                                <p class="no-address">No address saved yet</p>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
-                                </div>
+                                    
+                                    <button type="submit" class="update-btn">
+                                        <i class="fa-solid fa-save"></i>
+                                        Save Address
+                                    </button>
+                                </form>
                             </div>
                         </div>
 
-                        <!-- Payment Method Tab -->
-                        <!-- <div class="tab-content" id="payment-method">
-                            <div class="payment-section">
-                                <h2>Payment Method</h2>
-                                <button class="add-payment-btn">
-                                    <i class="fa-solid fa-plus"></i>
-                                    Add New Payment Method
-                                </button>
-                                <div class="payment-list">
-                                    <div class="payment-item">
-                                        <div class="payment-icon">
-                                            <i class="fa-brands fa-cc-visa"></i>
-                                        </div>
-                                        <div class="payment-details">
-                                            <p>**** **** **** 1234</p>
-                                            <p>Expires 12/25</p>
-                                        </div>
-                                        <div class="payment-actions">
-                                            <button class="edit-btn">Edit</button>
-                                            <button class="delete-btn">Delete</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
-                        <!-- Password Manager Tab -->
+                        <!-- tab change pass -->
                         <div class="tab-content" id="password-manager">
                             <div class="password-section">
                                 <h2>Password Manager</h2>
-                                <form class="password-form">
+                                <form class="password-form" id="passwordForm">
                                     <div class="form-group">
-                                        <label for="currentPassword">Current Password</label>
-                                        <input type="password" id="currentPassword" name="currentPassword" required>
+                                        <label for="currentPassword">Current Password *</label>
+                                        <div class="password-input-wrapper">
+                                            <input type="password" id="currentPassword" name="currentPassword" required>
+                                            <button type="button" class="toggle-password" data-target="currentPassword">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                        </div>
                                     </div>
+                                    
                                     <div class="form-group">
-                                        <label for="newPassword">New Password</label>
-                                        <input type="password" id="newPassword" name="newPassword" required>
+                                        <label for="newPassword">New Password *</label>
+                                        <div class="password-input-wrapper">
+                                            <input type="password" id="newPassword" name="newPassword" required minlength="6">
+                                            <button type="button" class="toggle-password" data-target="newPassword">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        <small class="password-hint">Password must be at least 6 characters long</small>
                                     </div>
+                                    
                                     <div class="form-group">
-                                        <label for="confirmPassword">Confirm New Password</label>
-                                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                        <label for="confirmPassword">Confirm New Password *</label>
+                                        <div class="password-input-wrapper">
+                                            <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6">
+                                            <button type="button" class="toggle-password" data-target="confirmPassword">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                        </div>
                                     </div>
+                                    
                                     <button type="submit" class="update-btn">Update Password</button>
                                 </form>
                             </div>
@@ -492,68 +680,6 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
         </div>
     </main>
 
-    <!-- Address Change Modal -->
-    <div class="modal-overlay" id="addressModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Thay đổi địa chỉ giao hàng</h3>
-                <button class="modal-close" onclick="closeAddressModal()">&times;</button>
-            </div>
-            <form id="addressForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Họ tên *</label>
-                        <input type="text" class="form-input" id="customerName" value="Trần Trang" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Số điện thoại *</label>
-                        <input type="tel" class="form-input" id="phoneNumber" value="0397507701" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Địa chỉ chi tiết *</label>
-                    <textarea class="form-textarea" id="detailAddress" placeholder="Nhập số nhà, tên đường..."
-                        required>Nhà Số 10 - Ngách 2 - Ngõ 103, Phường Cổ Nhuế 2, Quận Bắc Từ Liêm, Hà Nội</textarea>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Tỉnh/Thành phố *</label>
-                        <select class="form-input" id="province" required>
-                            <option value="">Chọn Tỉnh/Thành phố</option>
-                            <option value="hanoi" selected>Hà Nội</option>
-                            <option value="hcm">Hồ Chí Minh</option>
-                            <option value="danang">Đà Nẵng</option>
-                            <option value="haiphong">Hải Phòng</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Quận/Huyện *</label>
-                        <select class="form-input" id="district" required>
-                            <option value="">Chọn Quận/Huyện</option>
-                            <option value="bactuliem" selected>Bắc Từ Liêm</option>
-                            <option value="namtuliem">Nam Từ Liêm</option>
-                            <option value="caugiay">Cầu Giấy</option>
-                            <option value="dongda">Đống Đa</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Phường/Xã *</label>
-                    <select class="form-input" id="ward" required>
-                        <option value="">Chọn Phường/Xã</option>
-                        <option value="conhue2" selected>Cổ Nhuế 2</option>
-                        <option value="conhue1">Cổ Nhuế 1</option>
-                        <option value="phucdinh">Phúc Dinh</option>
-                        <option value="xuanhoa">Xuân Hòa</option>
-                    </select>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn-cancel" onclick="closeAddressModal()">Hủy</button>
-                    <button type="submit" class="btn-save">Lưu địa chỉ</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <footer class="footer">
         <div class="container footer_container">
@@ -636,10 +762,24 @@ $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'personal-info';
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
-    <script src="../../public/js/details.js"></script>
+    <!-- <script src="../../public/js/details.js"></script> -->
     <script src="../../public/js/index.js"></script>
     <script src="../../public/js/myAccount.js"></script>
     <script src="../../public/js/showMessageDialog.js"></script>
+
+    <!-- Order Detail Modal - Thêm vào cuối file HTML trước thẻ </body> -->
+    <div id="orderDetailModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Chi tiết đơn hàng</h2>
+                <span class="close" onclick="closeOrderDetailModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="orderDetailContent">
+                <!-- Content will be loaded here via AJAX -->
+                <div class="loading">Đang tải...</div>
+            </div>
+        </div>
+    </div>
 
 </body>
 

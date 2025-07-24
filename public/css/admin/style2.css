@@ -1,0 +1,139 @@
+/* --- Reset cơ bản --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- Body & Tiêu đề --- */
+body {
+    font-family: "Segoe UI", sans-serif;
+    background-color: #f1f4f8;
+    color: #333;
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* --- Bảng hiển thị nhân viên --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+table th,
+table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+table th {
+    background-color: #2c3e50;
+    color: white;
+    font-weight: 600;
+}
+
+table tr:hover {
+    background-color: #f0f8ff;
+}
+
+/* --- Ảnh đại diện trong bảng --- */
+table img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* --- Nút Thêm nhân viên --- */
+.button-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.add-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+    background-color: #218838;
+}
+
+/* --- Nút thêm khách hàng (nếu có dùng riêng) --- */
+.add-link {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.add-link:hover {
+    background-color: #2980b9;
+}
+
+/* --- Nút hành động (Cấm, Mở, Xóa, Sửa) --- */
+.action-link a {
+    display: inline-block;
+    margin: 2px;
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+/* Cấm */
+.action-link a.ban {
+    background-color: #e74c3c;
+}
+.action-link a.ban:hover {
+    background-color: #c0392b;
+}
+
+/* Mở */
+.action-link a.unban {
+    background-color: #3498db;
+}
+.action-link a.unban:hover {
+    background-color: #2980b9;
+}
+
+/* Xóa */
+.action-link a.delete {
+    background-color: #7f8c8d;
+}
+.action-link a.delete:hover {
+    background-color: #6c7a89;
+}
+
+/* Sửa */
+.action-link a.edit {
+    background-color: #2196F3;
+    color: white;
+}
+.action-link a.edit:hover {
+    background-color: #1e88e5;
+}

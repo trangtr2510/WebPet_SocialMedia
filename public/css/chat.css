@@ -1,5 +1,6 @@
 :root{
     --primary-color-hue: 252;
+    --primary-color-hue-1: 203;
     --color-dark-light-theme: 17%;
     --color-light-light-theme: 95%;
     --color-white-light-theme: 100%;
@@ -8,6 +9,7 @@
     --color-light: hsl(252, 30%, var(--color-light-light-theme));
     --color-gray: hsl(252, 15%, 60%);
     --color-primary: hsl(var(--primary-color-hue), 75%, 60%);
+    --color-primary-1: hsl(var(--primary-color-hue-1), 100%, 20%);
     --color-secondary: hsl(252, 100%, 90%);
     --color-success: hsl(120, 95%, 60%);
     --color-danger: hsl(0, 95%, 60%);
@@ -186,7 +188,7 @@ body{
     color: #fff;
     font-size: 1.1rem;
     padding: 7px 15px;
-    background:  var(--color-primary);
+    background:  var(--color-primary-1);
     border-radius: 5px;
 }
 
@@ -202,7 +204,7 @@ body{
     font-size: 1.2rem;
 }
 
-.users .search input{
+.users .search input {
     position: absolute;
     height: 42px;
     width: calc(100% - 50px);
@@ -211,18 +213,37 @@ body{
     font-size: 1rem;
     border-radius: 5px;
     outline: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
 }
 
-.users .search button{
+.users .search input.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.users .search button {
     width: 47px;
     height: 42px;
     border: none;
     outline: none;
-    color: #fff;
-    background: var(--color-primary);
+    color: var(--color-primary-1);
+    background: #fff;
     cursor: pointer;
     font-size: 1.1rem;
     border-radius: 0 5px 5px 0;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.users .search button.active {
+    color: #fff;
+    background: var(--color-primary-1);
+}
+
+.users .search button.active i::before{
+    content: "\f00d";
 }
 
 .users-list{
@@ -245,7 +266,8 @@ body{
     margin-bottom: 0px;
 }
 
-.users-list a .content img{
+.users-list a .content img,
+.content img{
     height: 40px;
     width: 40px;
 }
@@ -284,7 +306,7 @@ body{
 }
 
 .chat-box{
-    height: 500px;
+    height: 400px;
     overflow-y: auto;
     background: var(--color-white);
     padding: 10px 30px 20px 30px;
@@ -293,7 +315,7 @@ body{
 }
 
 .chat-box .chat{
-    margin: 15px 0;
+    margin: 10.5px 0;
 }
 
 .chat-box .chat p{
@@ -313,7 +335,7 @@ body{
 }
 
 .outgoing .details p{
-    background: var(--color-primary);
+    background: var(--color-primary-1);
     color: var(--color-white);
     border-radius: 18px 18px 0 18px;
 }
@@ -362,6 +384,6 @@ body{
     outline: none;
     color: #fff;
     font-size: 1.3rem;
-    background: var(--color-primary);
+    background: var(--color-primary-1);
     border-radius: 0 5px 5px 0;
 }

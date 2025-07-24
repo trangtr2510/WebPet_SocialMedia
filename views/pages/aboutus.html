@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Về Chúng Tôi - PetStore</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff8f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        h1 {
+            color: #cf7500;
+            margin-bottom: 10px;
+            font-size: 2.3rem;
+            font-weight: bold;
+        }
+        h2 {
+            color: #cf7500;
+            margin-bottom: 12px;
+            font-size: 1.5rem;
+        }
+        .about-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 40px;
+        }
+        .about-header-text {
+            max-width: 60%;
+        }
+        .about-header-img {
+            max-width: 220px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .section-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 34px;
+            margin: 44px 0;
+        }
+        .section-row.reverse {
+            flex-direction: row-reverse;
+        }
+        .section-img {
+            flex: 0 0 320px;
+            max-width: 320px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px #eee;
+            object-fit: cover;
+        }
+        .section-content {
+            flex: 1;
+        }
+        .mission-title {
+            margin-bottom: 8px;
+            color: #2d5d34;
+        }
+        .desc {
+            font-size: 1.08rem;
+            margin-bottom: 5px;
+        }
+        /* Responsive design */
+        @media (max-width: 900px) {
+            .about-header, .section-row {
+                flex-direction: column;
+                gap: 18px;
+            }
+            .about-header-text, .section-content {
+                max-width: 100%;
+            }
+            .about-header-img, .section-img {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Section 1: About Header -->
+        <div class="about-header">
+            <div class="about-header-text">
+                <h1>About Us</h1>
+                <p class="desc">
+                    PetStore's company and culture are a lot like our products. They’re crafted, not cobbled, for a delightful experience.
+                </p>
+            </div>
+            <img src="../../public/uploads/about/Hubspotters.webp" alt="Ảnh đội ngũ PetStore" class="about-header-img">
+        </div>
+
+        <!-- Section 2: Our Mission -->
+        <div class="section-row">
+            <img src="../../public/uploads/about/grow-better.webp" alt="Sứ mệnh PetStore" class="section-img">
+            <div class="section-content">
+                <h2 class="mission-title">Our Mission: Helping Millions of Pet Lovers Grow Better</h2>
+                <p class="desc">
+                    Life below isn’t just about growing bigger, but in growing better. And growing better means aligning the success of your own journey with the happiness of your pets.
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 3: Our Story -->
+        <div class="section-row reverse">
+            <img src="../../public/uploads/about/Rangan-Halligan.webp" alt="Câu chuyện PetStore" class="section-img">
+            <div class="section-content">
+                <h2>Our Story</h2>
+                <p class="desc">
+                    PetStore được thành lập năm 2020 bởi hai người yêu động vật với mong muốn tạo ra nơi thân thiện, chất lượng dành cho thú cưng và chủ nuôi. Từ một cửa hàng nhỏ, chúng tôi phát triển thành hệ thống phục vụ cộng đồng thú cưng toàn quốc.
+                    <br><br>
+                    Chúng tôi tin rằng: thú cưng là thành viên đặc biệt của gia đình và xứng đáng nhận được những điều tốt đẹp nhất!
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

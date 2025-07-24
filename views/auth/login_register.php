@@ -1,5 +1,5 @@
 <?php
-// Kiểm tra xem có thông báo nào được gửi từ login.php không
+// Kiểm tra xem có thông báo nào được gửi từ login.php 
 $loginMessage = isset($_GET['message']) ? $_GET['message'] : '';
 $username = isset($_GET['username']) ? htmlspecialchars($_GET['username']) : '';
 $full_name = isset($_GET['name']) ? htmlspecialchars($_GET['name']) : '';

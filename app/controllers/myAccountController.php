@@ -1,6 +1,6 @@
 <?php
 // controllers/myAccountController.php
-session_start();
+// session_start();
 include('../../config/config.php');
 include(__DIR__ . '/../models/User.php');
 
@@ -64,6 +64,43 @@ class MyAccountController {
             return ['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()];
         }
     }
+
+    public function updateAddress($data) {
+        if (!isset($_SESSION['user_id'])) {
+            return ['success' => false, 'message' => 'Vui lòng đăng nhập'];
+        }
+
+        try {
+            $user_id = $_SESSION['user_id'];
+            $user = $this->userModel->getUserById($user_id);
+
+            if (!$user) return ['success' => false, 'message' => 'Không tìm thấy người dùng'];
+
+            // Giữ nguyên các thông tin khác
+            $username = $user['username'];
+            $full_name = $user['full_name'];
+            $email = $user['email'];
+            $phone = $user['phone'];
+            $gender = $user['gender'];
+            $date_of_birth = $user['date_of_birth'];
+            $user_type = $user['user_type'] ?? 'customer';
+            $img = $user['img'] ?? 'default.jpg';
+            
+            // Cập nhật địa chỉ
+            $address = trim($data['address']);
+
+            $result = $this->userModel->updateUser($user_id, $username, $full_name, $email, $phone, $address, $date_of_birth, $gender, $user_type, $img);
+
+            if ($result) {
+                $_SESSION['address'] = $address;
+                return ['success' => true, 'message' => 'Cập nhật địa chỉ thành công!'];
+            }
+
+            return ['success' => false, 'message' => 'Cập nhật địa chỉ thất bại'];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()];
+        }
+    }
     
     public function updateAvatar($avatarFile) {
         if (!isset($_SESSION['user_id'])) {
@@ -120,6 +157,59 @@ class MyAccountController {
         }
     }
 
+    public function changePassword($data) {
+        if (!isset($_SESSION['user_id'])) {
+            return ['success' => false, 'message' => 'Vui lòng đăng nhập'];
+        }
+
+        try {
+            $user_id = $_SESSION['user_id'];
+            $current_password = $data['current_password'];
+            $new_password = $data['new_password'];
+            $confirm_password = $data['confirm_password'];
+
+            // Kiểm tra mật khẩu mới và xác nhận mật khẩu
+            if ($new_password !== $confirm_password) {
+                return ['success' => false, 'message' => 'Mật khẩu mới và xác nhận mật khẩu không khớp'];
+            }
+
+            // Kiểm tra độ dài mật khẩu
+            if (strlen($new_password) < 6) {
+                return ['success' => false, 'message' => 'Mật khẩu phải có ít nhất 6 ký tự'];
+            }
+
+            // Lấy thông tin người dùng hiện tại
+            $user = $this->userModel->getUserById($user_id);
+            if (!$user) {
+                return ['success' => false, 'message' => 'Không tìm thấy người dùng'];
+            }
+
+            // Kiểm tra mật khẩu hiện tại
+            if (!password_verify($current_password, $user['password_hash'])) {
+                return ['success' => false, 'message' => 'Mật khẩu hiện tại không đúng'];
+            }
+
+            // Kiểm tra mật khẩu mới không được trùng với mật khẩu cũ
+            if (password_verify($new_password, $user['password_hash'])) {
+                return ['success' => false, 'message' => 'Mật khẩu mới không được trùng với mật khẩu cũ'];
+            }
+
+            // Mã hóa mật khẩu mới
+            $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
+
+            // Cập nhật mật khẩu trong database
+            $result = $this->userModel->changePass($user_id, $new_password_hash);
+
+            if ($result) {
+                return ['success' => true, 'message' => 'Đổi mật khẩu thành công!'];
+            } else {
+                return ['success' => false, 'message' => 'Không thể cập nhật mật khẩu'];
+            }
+
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()];
+        }
+    }
 }
 
 // Xử lý các request
@@ -141,6 +231,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo json_encode($result);
                 exit();
                 break;
+
+            case 'update_address':
+                $data = [
+                    'address' => $_POST['address'] ?? ''
+                ];
+                $result = $controller->updateAddress($data);
+                echo json_encode($result);
+                exit();
+                break;
                 
             case 'update_avatar':
                 if (isset($_FILES['avatar'])) {
@@ -148,6 +247,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo json_encode($result);
                     exit();
                 }
+                break;
+                
+            case 'change_password':
+                $data = [
+                    'current_password' => $_POST['current_password'] ?? '',
+                    'new_password' => $_POST['new_password'] ?? '',
+                    'confirm_password' => $_POST['confirm_password'] ?? ''
+                ];
+                $result = $controller->changePassword($data);
+                echo json_encode($result);
+                exit();
                 break;
         }
     }

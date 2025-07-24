@@ -148,54 +148,54 @@ document.getElementById('addressForm').addEventListener('submit', function (e) {
 });
 
 // Province/District/Ward cascading dropdown simulation
-document.getElementById('province').addEventListener('change', function () {
-    const district = document.getElementById('district');
-    const ward = document.getElementById('ward');
+// document.getElementById('province').addEventListener('change', function () {
+//     const district = document.getElementById('district');
+//     const ward = document.getElementById('ward');
 
-    // Reset district and ward
-    district.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
-    ward.innerHTML = '<option value="">Chọn Phường/Xã</option>';
+//     // Reset district and ward
+//     district.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
+//     ward.innerHTML = '<option value="">Chọn Phường/Xã</option>';
 
-    if (this.value === 'hanoi') {
-        district.innerHTML = `
-                    <option value="">Chọn Quận/Huyện</option>
-                    <option value="bactuliem">Bắc Từ Liêm</option>
-                    <option value="namtuliem">Nam Từ Liêm</option>
-                    <option value="caugiay">Cầu Giấy</option>
-                    <option value="dongda">Đống Đa</option>
-                `;
-    } else if (this.value === 'hcm') {
-        district.innerHTML = `
-                    <option value="">Chọn Quận/Huyện</option>
-                    <option value="quan1">Quận 1</option>
-                    <option value="quan2">Quận 2</option>
-                    <option value="quan3">Quận 3</option>
-                    <option value="quan4">Quận 4</option>
-                `;
-    }
-});
+//     if (this.value === 'hanoi') {
+//         district.innerHTML = `
+//                     <option value="">Chọn Quận/Huyện</option>
+//                     <option value="bactuliem">Bắc Từ Liêm</option>
+//                     <option value="namtuliem">Nam Từ Liêm</option>
+//                     <option value="caugiay">Cầu Giấy</option>
+//                     <option value="dongda">Đống Đa</option>
+//                 `;
+//     } else if (this.value === 'hcm') {
+//         district.innerHTML = `
+//                     <option value="">Chọn Quận/Huyện</option>
+//                     <option value="quan1">Quận 1</option>
+//                     <option value="quan2">Quận 2</option>
+//                     <option value="quan3">Quận 3</option>
+//                     <option value="quan4">Quận 4</option>
+//                 `;
+//     }
+// });
 
-document.getElementById('district').addEventListener('change', function () {
-    const ward = document.getElementById('ward');
+// document.getElementById('district').addEventListener('change', function () {
+//     const ward = document.getElementById('ward');
 
-    // Reset ward
-    ward.innerHTML = '<option value="">Chọn Phường/Xã</option>';
+//     // Reset ward
+//     ward.innerHTML = '<option value="">Chọn Phường/Xã</option>';
 
-    if (this.value === 'bactuliem') {
-        ward.innerHTML = `
-                    <option value="">Chọn Phường/Xã</option>
-                    <option value="conhue2">Cổ Nhuế 2</option>
-                    <option value="conhue1">Cổ Nhuế 1</option>
-                    <option value="phucdinh">Phúc Dinh</option>
-                    <option value="xuanhoa">Xuân Hòa</option>
-                `;
-    } else if (this.value === 'caugiay') {
-        ward.innerHTML = `
-                    <option value="">Chọn Phường/Xã</option>
-                    <option value="dichvong">Dịch Vọng</option>
-                    <option value="dichvonghau">Dịch Vọng Hậu</option>
-                    <option value="mailam">Mai Lâm</option>
-                    <option value="quantan">Quan Tan</option>
-                `;
-    }
-});
+//     if (this.value === 'bactuliem') {
+//         ward.innerHTML = `
+//                     <option value="">Chọn Phường/Xã</option>
+//                     <option value="conhue2">Cổ Nhuế 2</option>
+//                     <option value="conhue1">Cổ Nhuế 1</option>
+//                     <option value="phucdinh">Phúc Dinh</option>
+//                     <option value="xuanhoa">Xuân Hòa</option>
+//                 `;
+//     } else if (this.value === 'caugiay') {
+//         ward.innerHTML = `
+//                     <option value="">Chọn Phường/Xã</option>
+//                     <option value="dichvong">Dịch Vọng</option>
+//                     <option value="dichvonghau">Dịch Vọng Hậu</option>
+//                     <option value="mailam">Mai Lâm</option>
+//                     <option value="quantan">Quan Tan</option>
+//                 `;
+//     }
+// });

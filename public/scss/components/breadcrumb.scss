@@ -51,7 +51,8 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
-    position: relative; /* Cần thiết cho positioning của eye icon */
+    position: relative;
+    /* Cần thiết cho positioning của eye icon */
 }
 
 .product_card:hover {
@@ -66,11 +67,47 @@
     transition: filter 0.3s ease;
 }
 
+
+.card_body_gift {
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, rgba($secondary_color_1, 0.1), rgba($secondary_color_1, 0.05));
+    display: flex;
+    font-size: 1.3rem;
+    align-items: center;
+    border-radius: 12px;
+    border: 1px solid rgba($secondary_color_1, 0.2);
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    .card_body_gift:hover {
+        background: linear-gradient(135deg, rgba($secondary_color_1, 0.4), rgba($secondary_color_1, 0.35));
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .card_body_gift_icon {
+        max-width: 20px;
+        height: auto;
+        margin-right: 1rem;
+        opacity: 0.8;
+        flex-shrink: 0; // Không cho icon bị co lại
+    }
+
+    // Text ellipsis cho gift text
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Eye icon styling với slide animation */
 .product_card .eye-icon {
     position: absolute;
-    top: 1rem; /* Cách từ top của ảnh */
-    right: 15px; /* Vị trí ban đầu - ngoài màn hình */
+    top: 1rem;
+    /* Cách từ top của ảnh */
+    right: 15px;
+    /* Vị trí ban đầu - ngoài màn hình */
     font-size: 1.5rem;
     color: white;
     background-color: rgba(0, 0, 0, 0.7);
@@ -78,7 +115,8 @@
     border-radius: 50%;
     opacity: 0;
     visibility: hidden;
-    transform: translateX(30px); /* Bắt đầu từ bên phải */
+    transform: translateX(30px);
+    /* Bắt đầu từ bên phải */
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 10;
     cursor: pointer;
@@ -96,14 +134,15 @@
 // }
 
 .product_card {
-    & > img {
+    &>img {
+
         // Hover effect cho ảnh
         &:hover {
             filter: brightness(0.9);
         }
-        
+
         // Hiện eye icon khi hover vào ảnh
-        &:hover + .eye-icon {
+        &:hover+.eye-icon {
             opacity: 1;
             visibility: visible;
             transform: translateX(0); // Trượt vào vị trí
@@ -140,9 +179,10 @@
     .category_layout {
         flex-direction: column;
     }
+
     .products_grid {
         grid-template-columns: 1fr;
-        grid-template-rows: repeat(9, 1fr);
+        // grid-template-rows: repeat(9, 1fr);
     }
 }
 
@@ -152,28 +192,28 @@
         position: relative;
         padding: 0 1rem;
         align-items: center;
-        
+
         .products_header {
             flex-direction: column;
             gap: 1rem;
             margin-bottom: 1rem;
             align-items: center;
-            
+
             div {
                 text-align: center;
-                
+
                 .products_title {
                     font-size: 1.4rem;
                     line-height: 1.3;
                     margin-bottom: 0.5rem;
                 }
-                
+
                 .products_count {
                     font-size: 0.9rem;
                     margin-bottom: 0.5rem;
                 }
             }
-            
+
             .sort_dropdown {
                 width: 100%;
                 max-width: 300px;
@@ -186,7 +226,7 @@
                 cursor: pointer;
                 transition: all 0.3s ease;
                 position: relative;
-                
+
                 // Styling cho dropdown arrow
                 appearance: none;
                 -webkit-appearance: none;
@@ -196,18 +236,18 @@
                 background-position: right 1rem center;
                 background-size: 1rem;
                 padding-right: 3rem;
-                
+
                 &:hover {
                     border-color: #007bff;
                     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
                 }
-                
+
                 &:focus {
                     outline: none;
                     border-color: #007bff;
                     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
                 }
-                
+
                 // Styling cho các option
                 option {
                     padding: 0.8rem 1rem;
@@ -215,11 +255,11 @@
                     background: white;
                     color: #333;
                     border: none;
-                    
+
                     &:hover {
                         background: #f8f9fa;
                     }
-                    
+
                     &:checked {
                         background: #007bff;
                         color: white;
@@ -227,27 +267,27 @@
                 }
             }
         }
-        
+
         .products_grid {
             display: grid;
             grid-template-columns: 1fr 1fr; // 2 cột đều nhau
             gap: 1rem;
             margin-top: 1.5rem;
-            
+
             .product_card {
                 width: 100%;
                 height: 100%;
                 padding: 1rem;
                 position: relative;
-                
+
                 img {
-                    height: 120px; // Giảm chiều cao ảnh trên mobile
+                    height: 120px;
                     width: 100%;
                     object-fit: cover;
                     border-radius: 8px;
                     margin-bottom: 0.8rem;
                 }
-                
+
                 .eye-icon {
                     position: absolute;
                     top: 1.5rem;
@@ -259,52 +299,87 @@
                     border-radius: 50%;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    
+
                     &:hover {
                         background: rgba(0, 0, 0, 0.7);
                         transform: scale(1.1);
                     }
                 }
-                
+
                 .product_details {
                     .product_code {
                         font-size: 1rem;
                         margin: 0.5rem 0;
-                        min-height: 2.4rem; // Giảm chiều cao cho 2 dòng
+                        min-height: 2.4rem;
                         display: -webkit-box;
                         -webkit-line-clamp: 2;
                         -webkit-box-orient: vertical;
                         overflow: hidden;
                         line-height: 1.2;
                     }
-                    
+
                     .product_meta {
                         display: flex;
                         flex-direction: column;
                         gap: 0.3rem;
                         margin-bottom: 0.8rem;
-                        
-                        .product_gender, .product_age {
+
+                        .product_gender,
+                        .product_age {
                             font-size: 0.9rem;
                             color: #666;
                         }
                     }
-                    
+
                     .product_price {
                         font-size: 1.2rem;
                         font-weight: bold;
                         color: #e74c3c;
                         margin-bottom: 0.5rem;
                     }
+
+                    .card_body_gift {
+                        margin-top: 1.5rem;
+                        padding: 1.2rem;
+                        background: linear-gradient(135deg, rgba($secondary-color-1, 0.1), rgba($secondary-color-1, 0.05));
+                        display: flex;
+                        font-size: 1.3rem;
+                        align-items: center;
+                        border-radius: 12px;
+                        border: 1px solid rgba($secondary-color-1, 0.2);
+                        color: #4a5568;
+                        cursor: pointer;
+                        transition: all 0.3s ease-in-out;
+
+                        &:hover {
+                            background: linear-gradient(135deg, rgba($secondary-color-1, 0.4), rgba($secondary-color-1, 0.35));
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                            transform: translateY(-2px);
+                        }
+
+                        &__icon {
+                            max-width: 45px;
+                            margin-right: 1rem;
+                            opacity: 0.8;
+                            flex-shrink: 0;
+                        }
+
+                        &__text {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            flex: 1;
+                        }
+                    }
                 }
-                
+
                 &:hover {
-                    transform: translateY(-1px); // Giảm effect hover trên mobile
+                    transform: translateY(-1px);
                     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
                 }
             }
         }
-        
+
         .pagination {
             margin-top: 2rem;
             display: flex;
@@ -312,8 +387,9 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 0.5rem;
-            
-            button, a {
+
+            button,
+            a {
                 padding: 0.5rem 0.8rem;
                 font-size: 0.9rem;
                 min-width: 40px;
@@ -323,7 +399,7 @@
                 justify-content: center;
             }
         }
-        
+
         // Thêm padding bottom cho container
         padding-bottom: 2rem;
     }

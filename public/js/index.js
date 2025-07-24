@@ -1,6 +1,135 @@
+// Active page navigation
+document.addEventListener('DOMContentLoaded', function () {
+    const navLinks = document.querySelectorAll('.nav_link');
+    const mobileNavLinks = document.querySelectorAll('.mobile_nav_link');
+
+    // Desktop navigation
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            // Remove active class from all links
+            navLinks.forEach(l => l.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+        });
+    });
+
+    // Mobile navigation
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            // Skip if this is the category link (handled separately)
+            if (this.textContent.trim().includes('Category')) return;
+
+            // Remove active class from all mobile links
+            mobileNavLinks.forEach(l => l.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+        });
+    });
+});
+
+// Mobile menu functions
+// Fixed Mobile menu functions
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const overlay = document.querySelector('.mobile_overlay');
+    
+    console.log('Toggle - mobileMenu:', mobileMenu);
+    console.log('Toggle - overlay:', overlay);
+    
+    if (mobileMenu && overlay) {
+        // Reset any transform styles that might interfere
+        mobileMenu.style.transform = '';
+        mobileMenu.style.left = '';
+        
+        // Toggle active classes
+        mobileMenu.classList.toggle('active');
+        overlay.classList.toggle('active');
+        
+        // Toggle body class for additional control
+        document.body.classList.toggle('mobile-menu-open');
+        
+        console.log('Menu active:', mobileMenu.classList.contains('active'));
+    } else {
+        console.error('Elements not found!');
+    }
+}
+
+function closeMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const overlay = document.querySelector('.mobile_overlay');
+    
+    console.log('Close - mobileMenu:', mobileMenu);
+    console.log('Close - overlay:', overlay);
+    
+    if (mobileMenu && overlay) {
+        // Reset any transform styles that might interfere
+        mobileMenu.style.transform = '';
+        mobileMenu.style.left = '';
+        
+        // Remove active classes
+        mobileMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        
+        // Remove body class
+        document.body.classList.remove('mobile-menu-open');
+        
+        console.log('Menu closed');
+    } else {
+        console.error('Elements not found in closeMobileMenu!');
+    }
+}
+
+
+// Mobile category dropdown toggle
+function toggleMobileCategory(e) {
+    e.preventDefault();
+    const dropdown = document.getElementById('mobileCategoryDropdown');
+    const chevron = e.target.closest('.mobile_nav_link').querySelector('i');
+
+    dropdown.classList.toggle('active');
+
+    // Rotate chevron icon
+    if (dropdown.classList.contains('active')) {
+        chevron.style.transform = 'rotate(180deg)';
+    } else {
+        chevron.style.transform = 'rotate(0deg)';
+    }
+}
+
+// Handle chevron click specifically
+document.addEventListener('DOMContentLoaded', function () {
+    const chevronIcon = document.querySelector('.mobile_nav_link i.fa-chevron-down');
+    if (chevronIcon) {
+        chevronIcon.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMobileCategory(e);
+        });
+    }
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function (e) {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuBtn = document.querySelector('.mobile_menu_btn');
+
+    if (mobileMenu && mobileMenuBtn) {
+        if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+            closeMobileMenu();
+        }
+    }
+});
+
+// Handle window resize
+window.addEventListener('resize', function () {
+    if (window.innerWidth > 768) {
+        closeMobileMenu();
+    }
+});
+
 // Account dropdown functionality
 const accountBtn = document.querySelector('.account_btn');
-const notifyBox = document.querySelector('.notify_box');
+const notifyBox = document.querySelector('.notify_box_login_register');
 
 accountBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -85,27 +214,50 @@ searchInput.addEventListener('keypress', (e) => {
 
 // Cart functionality
 const cartBtn = document.querySelector('.cart_btn');
-cartBtn.addEventListener('click', () => {
-    alert('Mở giỏ hàng');
-});
+
+if (cartBtn) {
+    cartBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // Nếu đang ở trang con như /views/pages, chuyển đến cart.php tương đối:
+        window.location.href = "/WebsitePet/views/pages/cart.php";
+
+        // Hoặc tốt hơn: luôn dùng đường dẫn tuyệt đối từ gốc:
+        // window.location.href = "/WebsitePet/views/pages/cart.php";
+    });
+}
+
 
 // Auth buttons functionality
 const loginBtn = document.querySelector('.auth_btn.login');
 const registerBtn = document.querySelector('.auth_btn.register');
+const headerElement = document.querySelector('header');
 
+// Kiểm tra xem header có class "header_category" không
+const isCategoryPage = headerElement && headerElement.classList.contains('header_category');
+
+// Xác định đường dẫn dựa theo trang hiện tại
+const loginUrl = isCategoryPage
+    ? "../../views/auth/login_register.php?action=signin"
+    : "views/auth/login_register.php?action=signin";
+
+const signupUrl = isCategoryPage
+    ? "../../views/auth/login_register.php?action=signup"
+    : "views/auth/login_register.php?action=signup";
+
+// Gắn sự kiện cho nút đăng nhập
 if (loginBtn) {
     loginBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        // Chuyển đến form đăng nhập
-        window.location.href = "views/auth/login_register.php?action=signin";
+        window.location.href = loginUrl;
     });
 }
 
+// Gắn sự kiện cho nút đăng ký
 if (registerBtn) {
     registerBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        // Chuyển đến form đăng ký
-        window.location.href = "views/auth/login_register.php?action=signup";
+        window.location.href = signupUrl;
     });
 }
 

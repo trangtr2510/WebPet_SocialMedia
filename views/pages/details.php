@@ -4,6 +4,7 @@ include_once(__DIR__ .'/../../config/config.php');
 include_once(__DIR__ .'/../../app/models/Product.php');
 include_once(__DIR__ .'/../../app/models/User.php');
 include_once(__DIR__ .'/../../app/models/ProductImage.php');
+include_once(__DIR__ .'/../../app/models/Category.php'); // Thêm Category model
 
 $is_logged_in = isset($_SESSION['user_id']);
 $username = $is_logged_in ? $_SESSION['username'] : '';
@@ -14,6 +15,7 @@ $userModel = new User($conn);
 
 // Khởi tạo các class
 $product = new Product($conn);
+$category = new Category($conn); // Khởi tạo Category model
 // Lấy tất cả sản phẩm
 $products = $product->getAllProduct();
 $productImages = new ProductImage($conn);
@@ -34,6 +36,29 @@ if (empty($productData)) {
 }
 
 $currentProduct = $productData[0]; // Lấy sản phẩm đầu tiên
+
+// Lấy thông tin category và parent category
+$categoryInfo = null;
+$parentCategoryId = null;
+$isCartInterface = false; // Biến để xác định giao diện
+
+if ($currentProduct['category_id']) {
+    $categoryInfo = $category->getCategoryByID($currentProduct['category_id']);
+    if ($categoryInfo) {
+        // Nếu có parent_category_id, lấy parent category
+        if ($categoryInfo['parent_category_id']) {
+            $parentCategoryId = $categoryInfo['parent_category_id'];
+        } else {
+            // Nếu không có parent, chính nó là parent category
+            $parentCategoryId = $categoryInfo['category_id'];
+        }
+        
+        // Kiểm tra nếu parent category là 8 thì hiển thị giao diện giỏ hàng
+        if ($parentCategoryId == 8) {
+            $isCartInterface = true;
+        }
+    }
+}
 
 // Lấy danh sách ảnh của sản phẩm
 $images = $productImages->getImagesByProduct($product_id);
@@ -87,6 +112,91 @@ if ($currentProduct['category_id']) {
     <link rel="stylesheet" href="../../fontawesome-free-6.4.2-web/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <title>Monito - Home</title>
+    <style>
+        /* CSS cho quantity selector */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .quantity-selector label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .quantity-input_detail {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .quantity-btn {
+            background: #f8f9fa;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+            transition: background-color 0.3s;
+        }
+        
+        .quantity-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .quantity-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .quantity-number {
+            padding: 10px 10px;
+            border: none;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            width: 60px;
+            background: white;
+        }
+        
+        .add-to-cart-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .add-to-cart-btn:hover {
+            background: #0056b3;
+        }
+        
+        .add-to-cart-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .cart-interface {
+            margin-top: 20px;
+        }
+        
+        .total-price {
+            font-size: 18px;
+            font-weight: 600;
+            color: #007bff;
+            margin: 15px 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -104,17 +214,25 @@ if ($currentProduct['category_id']) {
                         <li class="nav_item"><a href="../../index.php" class="nav_link">Home</a></li>
                         <li class="nav_item">
                             <a href="../../views/pages/category.html" class="nav_link">Category</a>
+                            <div class="category_dropdown">
+                                <a href="#" class="category_dropdown_item">
+                                    <i class="fa-solid fa-paw"></i> Thú cưng
+                                </a>
+                                <a href="#" class="category_dropdown_item">
+                                    <i class="fa-solid fa-box"></i> Sản phẩm
+                                </a>
+                            </div>
                         </li>
                         <li class="nav_item">
                             <a href="#" class="nav_link">Social Media</a>
                         </li>
                         <li class="nav_item"><a href="#" class="nav_link">About</a></li>
-                        <li class="nav_item"><a href="#" class="nav_link">Contact</a></li>
+                        <li class="nav_item"><a href="./contact.php" class="nav_link">Contact</a></li>
                     </ul>
                 </div>
                 <div class="nav_right">
                     <!-- Search Box -->
-                    <div class="search_box">
+                    <div class="search_box" style = "display: none;">
                         <input type="text" class="search_input" placeholder="Tìm kiếm sản phẩm...">
                         <i class="fa-solid fa-search search_icon"></i>
                     </div>
@@ -125,7 +243,7 @@ if ($currentProduct['category_id']) {
                             <i class="fa-solid fa-user"></i>
                             
                         </button>
-                        <div class="notify_box">
+                        <div class="notify_box_login_register">
                             <?php if ($is_logged_in): ?>
                                 <div class="user_info">
                                     <img src="../../public/uploads/avatar/<?php echo htmlspecialchars($img); ?>" alt="Avatar" class="user_avatar">
@@ -137,7 +255,7 @@ if ($currentProduct['category_id']) {
                                     <?php endif; ?></p>
                                 </div>
                                 <?php if ($is_logged_in && ($userModel->isAdmin($_SESSION) || $userModel->isEmployee($_SESSION))): ?>
-                                    <a href="../../views/pages/admin_dashboard.php" class="auth_btn myOrder">
+                                    <a href="../../views/admin/dashboard.php" class="auth_btn myOrder">
                                         <i class="fa-solid fa-gear"></i>
                                         Quản lý
                                     </a>
@@ -197,7 +315,14 @@ if ($currentProduct['category_id']) {
                 <a href="../../index.php" class="mobile_nav_link">Home</a>
             </li>
             <li class="mobile_nav_item">
-                <a href="../../views/pages/category.html" class="mobile_nav_link">Category</a>
+                <a href="../../views/pages/category.html" class="mobile_nav_link">
+                    Category
+                    <i class="fa-solid fa-chevron-down" style="float: right; transition: transform 0.3s ease;"></i>
+                </a>
+                <div class="mobile_category_dropdown" id="mobileCategoryDropdown">
+                    <a href="#" class="mobile_category_item">Thú cưng</a>
+                    <a href="#" class="mobile_category_item">Sản phẩm</a>
+                </div>
             </li>
             <li class="mobile_nav_item">
                 <a href="#" class="mobile_nav_link">Social Media</a>
@@ -211,10 +336,10 @@ if ($currentProduct['category_id']) {
         </ul>
 
         <!-- Mobile Auth Buttons -->
-        <div class="mobile_auth_btns">
+        <!-- <div class="mobile_auth_btns">
             <a href="#" class="mobile_auth_btn mobile_login">Đăng nhập</a>
             <a href="#" class="mobile_auth_btn mobile_register">Đăng ký</a>
-        </div>
+        </div> -->
 
         <!-- Mobile Cart Info -->
         <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; text-align: center;">
@@ -252,7 +377,7 @@ if ($currentProduct['category_id']) {
                                              data-gender="<?php echo htmlspecialchars($image['gender'] ?? ''); ?>"
                                              data-color="<?php echo htmlspecialchars($image['color'] ?? ''); ?>"
                                              data-index="<?php echo $index; ?>">
-                                            <img src="../../public/uploads/pet/<?php echo htmlspecialchars($image['image_url']); ?>" 
+                                            <img src="../../public/uploads/product/<?php echo htmlspecialchars($image['image_url']); ?>" 
                                                  alt="<?php echo htmlspecialchars($image['alt_text'] ?: $currentProduct['product_name']); ?>" />
                                         </div>
                                     <?php endforeach; ?>
@@ -275,7 +400,7 @@ if ($currentProduct['category_id']) {
                                              data-gender="<?php echo htmlspecialchars($image['gender'] ?? ''); ?>"
                                              data-color="<?php echo htmlspecialchars($image['color'] ?? ''); ?>"
                                              data-index="<?php echo $index; ?>">
-                                            <img src="../../public/uploads/pet/<?php echo htmlspecialchars($image['image_url']); ?>" 
+                                            <img src="../../public/uploads/product/<?php echo htmlspecialchars($image['image_url']); ?>" 
                                                  alt="<?php echo htmlspecialchars($image['alt_text'] ?: $currentProduct['product_name']); ?>" />
                                         </div>
                                     <?php endforeach; ?>
@@ -292,12 +417,36 @@ if ($currentProduct['category_id']) {
                         <h1 class="product2_title"><?php echo htmlspecialchars($currentProduct['product_name']); ?></h1>
                         <h2 class="product2_price"><?php echo formatPrice($currentProduct['price']); ?></h2>
                         
-                        <div class="product2_btns">
-                            <a href="#" class="btn btn_bg" onclick="contactUs()">Contact us</a>
-                            <a href="#" class="btn btn_outlined">
-                                <i class="fa-regular fa-comment-dots"></i> Chat with Monito
-                            </a>
-                        </div>
+                        <?php if ($isCartInterface): ?>
+                            <!-- Giao diện giỏ hàng cho parent category = 8 -->
+                            <div class="cart-interface">
+                                <div class="quantity-selector">
+                                    <label for="quantity">Quantity:</label>
+                                    <div class="quantity-input_detail">
+                                        <button type="button" class="quantity-btn" id="decrease-btn" onclick="decreaseQuantity()">-</button>
+                                        <input type="number" id="quantity" class="quantity-number" value="1" min="1" max="<?php echo $currentProduct['stock_quantity']; ?>" readonly>
+                                        <button type="button" class="quantity-btn" id="increase-btn" onclick="increaseQuantity()">+</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="total-price">
+                                    Total: <span id="total-price"><?php echo formatPrice($currentProduct['price']); ?></span>
+                                </div>
+                                
+                                <button type="button" class="add-to-cart-btn" onclick="addToCart()" <?php echo $currentProduct['stock_quantity'] <= 0 ? 'disabled' : ''; ?>>
+                                    <i class="fas fa-shopping-cart"></i> 
+                                    <?php echo $currentProduct['stock_quantity'] <= 0 ? 'Out of Stock' : 'Add to Cart'; ?>
+                                </button>
+                            </div>
+                        <?php else: ?>
+                            <!-- Giao diện gốc cho các category khác -->
+                            <div class="product2_btns">
+                                <a href="./contact.php" class="btn btn_bg">Contact us</a>
+                                <a href="./social_media.php" class="btn btn_outlined">
+                                    <i class="fa-regular fa-comment-dots"></i> Chat with Monito
+                                </a>
+                            </div>
+                        <?php endif; ?>
 
                         <ul class="product2_list">
                             <li class="product2_item" id="gender-item" style="display: none;">
@@ -557,7 +706,10 @@ if ($currentProduct['category_id']) {
                             </div>
                             <div class="row">
                                 <?php if (!empty($products)): ?>
-                                    <?php foreach ($products as $productItem): ?>
+                                    <?php 
+                                    // Lấy 4 sản phẩm đầu tiên
+                                    $limitedProducts = array_slice($products, 0, 4);
+                                    foreach ($limitedProducts as $productItem): ?>
                                         <?php
                                         // Lấy ảnh đầu tiên của sản phẩm
                                         $images = $productImages->getImagesByProduct($productItem['product_id']);
@@ -569,7 +721,7 @@ if ($currentProduct['category_id']) {
                                         
                                         <div class="column">
                                             <div class="card">
-                                                <img src="../../public/uploads/pet/<?php echo htmlspecialchars($mainImage); ?>" alt="<?php echo htmlspecialchars($productItem['product_name']); ?>">
+                                                <img src="../../public/uploads/product/<?php echo htmlspecialchars($mainImage); ?>" alt="<?php echo htmlspecialchars($productItem['product_name']); ?>">
                                                 <i class="fa-solid fa-eye eye-icon" onclick="viewProduct(<?php echo $productItem['product_id']; ?>)"></i>
                                                 <div class="card_body">
                                                     <h3 class="card_body_title"><?php echo htmlspecialchars($productItem['product_name'] . ' - ' . $productItem['color']); ?></h3>
@@ -684,8 +836,16 @@ if ($currentProduct['category_id']) {
     <script>
         const imageData = <?php echo json_encode($galleryImages); ?>;
     </script>
-    <script src="../../public/js/details.js"></script>
-    <script src="../../public/js/index.js"></script>
+    <script>
+        // Biến global để lưu giá gốc và stock
+        const originalPrice = <?php echo $currentProduct['price']; ?>;
+        const maxStock = <?php echo $currentProduct['stock_quantity']; ?>;
+        const isCartInterface = <?php echo $isCartInterface ? 'true' : 'false'; ?>;
+        const productId = <?php echo $product_id; ?>;
+        const productSize = "<?php echo htmlspecialchars($currentProduct['size'] ?? ''); ?>";
+    </script>
+    <script src="/WebsitePet/public/js/details.js"></script>
+    <script src="/WebsitePet/public/js/index.js"></script>
 </body>
 
 </html>

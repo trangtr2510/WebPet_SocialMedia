@@ -1,0 +1,307 @@
+Parameters: Array
+(
+    [timePeriod] => month
+    [selectedMonth] => 7
+    [selectedYear] => 2025
+)
+
+Database connection: OK
+Processing: month, 2025-07-23, 7, 2025, 1
+Data retrieved: Array
+(
+    [period_type] => Tháng
+    [current_period] => Tháng 7/2025
+    [previous_period] => Tháng trước
+    [current_stats] => Array
+        (
+            [total_orders] => 15
+            [total_revenue] => 2500000
+            [status_counts] => Array
+                (
+                    [pending] => 3
+                    [processing] => 2
+                    [shipped] => 4
+                    [delivered] => 5
+                    [cancelled] => 1
+                )
+
+        )
+
+    [previous_stats] => Array
+        (
+            [total_orders] => 12
+            [total_revenue] => 2000000
+            [status_counts] => Array
+                (
+                    [pending] => 2
+                    [processing] => 3
+                    [shipped] => 3
+                    [delivered] => 3
+                    [cancelled] => 1
+                )
+
+        )
+
+    [product_stats] => Array
+        (
+            [0] => Array
+                (
+                    [product_name] => Thức ăn cho chó
+                    [total_quantity] => 10
+                    [total_sales] => 500000
+                )
+
+            [1] => Array
+                (
+                    [product_name] => Thức ăn cho mèo
+                    [total_quantity] => 8
+                    [total_sales] => 400000
+                )
+
+            [2] => Array
+                (
+                    [product_name] => Đồ chơi cho pet
+                    [total_quantity] => 5
+                    [total_sales] => 250000
+                )
+
+        )
+
+    [previous_product_stats] => Array
+        (
+            [0] => Array
+                (
+                    [product_name] => Thức ăn cho chó
+                    [total_quantity] => 8
+                    [total_sales] => 400000
+                )
+
+            [1] => Array
+                (
+                    [product_name] => Thức ăn cho mèo
+                    [total_quantity] => 6
+                    [total_sales] => 300000
+                )
+
+        )
+
+)
+
+Creating Excel file...
+Setting headers for file: Thong_ke_don_hang_Tháng_2025-07-23_22-00-59.xlsx
+Saving Excel file...
+Excel file sent successfully
+Parameters: Array
+(
+    [timePeriod] => month
+    [selectedMonth] => 7
+    [selectedYear] => 2025
+)
+
+Database connection: OK
+Processing: month, 2025-07-23, 7, 2025, 1
+Getting month stats for: 7/2025
+Parameters: Array
+(
+    [timePeriod] => day
+    [selectedDate] => 2025-07-24
+)
+
+New database connection created successfully
+Database connection type: object
+Database connection class: mysqli
+Processing: day, 2025-07-24, 07, 2025, 1
+Getting day stats for: 2025-07-24
+No real data found, using dummy data
+Data retrieved: Array
+(
+    [period_type] => Ngày
+    [current_period] => 2025-07-24
+    [previous_period] => 2025-07-23
+    [current_stats] => Array
+        (
+            [total_orders] => 15
+            [total_revenue] => 2500000
+            [status_counts] => Array
+                (
+                    [pending] => 3
+                    [processing] => 2
+                    [shipped] => 4
+                    [delivered] => 5
+                    [cancelled] => 1
+                )
+
+        )
+
+    [previous_stats] => Array
+        (
+            [total_orders] => 12
+            [total_revenue] => 2000000
+            [status_counts] => Array
+                (
+                    [pending] => 2
+                    [processing] => 3
+                    [shipped] => 3
+                    [delivered] => 3
+                    [cancelled] => 1
+                )
+
+        )
+
+    [product_stats] => Array
+        (
+            [0] => Array
+                (
+                    [product_name] => Thức ăn cho chó
+                    [total_quantity] => 10
+                    [total_sales] => 500000
+                )
+
+            [1] => Array
+                (
+                    [product_name] => Thức ăn cho mèo
+                    [total_quantity] => 8
+                    [total_sales] => 400000
+                )
+
+            [2] => Array
+                (
+                    [product_name] => Đồ chơi cho pet
+                    [total_quantity] => 5
+                    [total_sales] => 250000
+                )
+
+        )
+
+    [previous_product_stats] => Array
+        (
+            [0] => Array
+                (
+                    [product_name] => Thức ăn cho chó
+                    [total_quantity] => 8
+                    [total_sales] => 400000
+                )
+
+            [1] => Array
+                (
+                    [product_name] => Thức ăn cho mèo
+                    [total_quantity] => 6
+                    [total_sales] => 300000
+                )
+
+        )
+
+)
+
+Creating Excel file...
+Setting headers for file: Thong_ke_don_hang_Ngày_2025-07-23_22-29-59.xlsx
+Saving Excel file...
+Excel file sent successfully
+Parameters: Array
+(
+    [timePeriod] => month
+    [selectedMonth] => 7
+    [selectedYear] => 2025
+)
+
+New database connection created successfully
+Database connection type: object
+Database connection class: mysqli
+Processing: month, 2025-07-23, 7, 2025, 1
+Getting month stats for: 7/2025
+Data retrieved: Array
+(
+    [period_type] => Tháng
+    [current_period] => Tháng 7/2025
+    [previous_period] => Tháng 6/2025
+    [current_stats] => Array
+        (
+            [total_orders] => 7
+            [total_revenue] => 450000
+            [status_counts] => Array
+                (
+                    [pending] => 3
+                    [processing] => 2
+                    [shipped] => 0
+                    [delivered] => 2
+                    [cancelled] => 0
+                )
+
+        )
+
+    [previous_stats] => Array
+        (
+            [total_orders] => 0
+            [total_revenue] => 0
+            [status_counts] => Array
+                (
+                    [pending] => 0
+                    [processing] => 0
+                    [shipped] => 0
+                    [delivered] => 0
+                    [cancelled] => 0
+                )
+
+        )
+
+    [product_stats] => Array
+        (
+            [0] => Array
+                (
+                    [product_name] => Sữa tắm cho chó mèo
+                    [daily_stats] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [date] => 2025-07-21
+                                    [quantity] => 2
+                                    [sales] => 300000.00
+                                )
+
+                            [1] => Array
+                                (
+                                    [date] => 2025-07-22
+                                    [quantity] => 1
+                                    [sales] => 150000.00
+                                )
+
+                        )
+
+                    [total_quantity] => 3
+                    [total_sales] => 450000
+                )
+
+        )
+
+    [previous_product_stats] => Array
+        (
+        )
+
+    [revenue_stats] => Array
+        (
+            [0] => Array
+                (
+                    [order_date] => 2025-07-21
+                    [delivered_orders] => 1
+                    [daily_revenue] => 300000.00
+                )
+
+            [1] => Array
+                (
+                    [order_date] => 2025-07-22
+                    [delivered_orders] => 1
+                    [daily_revenue] => 150000.00
+                )
+
+        )
+
+    [previous_revenue_stats] => Array
+        (
+        )
+
+)
+
+Creating Excel file...
+Setting headers for file: Thong_ke_don_hang_Tháng_2025-07-23_22-30-07.xlsx
+Saving Excel file...
+Excel file sent successfully

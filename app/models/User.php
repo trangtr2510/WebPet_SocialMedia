@@ -8,7 +8,7 @@ class User {
 
     // Đăng nhập bằng email hoặc username
     public function login($emailOrUsername) {
-        $query = "SELECT * FROM users WHERE email = ? OR username = ?";
+        $query = "SELECT * FROM users WHERE (email = ? OR username = ?) AND is_active = 1;";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("ss", $emailOrUsername, $emailOrUsername);
         $stmt->execute();

@@ -1,0 +1,742 @@
+// Variables
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$info-color: #17a2b8;
+$warning-color: #ffc107;
+
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+
+$white: #ffffff;
+$black: #000000;
+
+$border-radius: 4px;
+$border-radius-lg: 8px;
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$transition: all 0.3s ease;
+
+$font-size-xs: 12px;
+$font-size-sm: 13px;
+$font-size-base: 14px;
+$font-size-lg: 16px;
+
+// Mixins
+@mixin button-variant($color, $background, $border) {
+    color: $color;
+    background-color: $background;
+    border-color: $border;
+
+    &:hover {
+        background-color: darken($background, 10%);
+        border-color: darken($border, 10%);
+    }
+}
+
+@mixin transition($property: all, $duration: 0.3s, $timing: ease) {
+    transition: $property $duration $timing;
+}
+
+// Main Container
+.pm-container {
+    max-width: 1400px;
+    width: calc(100% - 60px);
+    margin: 0 auto;
+    padding: 20px;
+}
+
+// Tab Navigation
+.pm-tab-navigation {
+    display: flex;
+    background: $white;
+    border-radius: $border-radius-lg $border-radius-lg 0 0;
+    box-shadow: $box-shadow;
+    margin-bottom: 20px;
+
+    .pm-tab-nav-item {
+        padding: 15px 25px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: $font-size-base;
+        font-weight: 500;
+        color: $gray-600;
+        border-bottom: 3px solid transparent;
+        @include transition();
+
+        &.pm-active {
+            color: $primary-color;
+            border-bottom-color: $primary-color;
+        }
+
+        &:hover {
+            background-color: $gray-100;
+        }
+    }
+}
+
+// Tab Content
+.pm-tab-content {
+    display: none;
+    background: $white;
+    border-radius: 0 0 $border-radius-lg $border-radius-lg;
+    box-shadow: $box-shadow;
+    padding: 20px;
+
+    &.pm-active {
+        display: block;
+    }
+}
+
+// Table View
+.pm-table-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+
+    .pm-bulk-select {
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: $font-size-base;
+            color: $gray-600;
+        }
+    }
+
+    .pm-bulk-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        button {
+            padding: 8px 16px;
+            border: 1px solid $gray-300;
+            background: $white;
+            cursor: pointer;
+            border-radius: $border-radius;
+            font-size: $font-size-sm;
+            @include transition();
+
+            &:hover {
+                background-color: $gray-100;
+            }
+
+            &.pm-edit-btn {
+                @include button-variant($white, $info-color, $info-color);
+            }
+
+            &.pm-copy-btn {
+                @include button-variant($white, $secondary-color, $secondary-color);
+            }
+
+            &.pm-delete-btn {
+                @include button-variant($white, $danger-color, $danger-color);
+            }
+
+            &.pm-export-btn {
+                @include button-variant($white, $success-color, $success-color);
+            }
+        }
+    }
+}
+
+// Data Table
+.pm-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: $white;
+    font-size: $font-size-sm;
+
+    tbody>tr>td {
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            // .action-buttons{
+            //     display: flex;
+            //     flex-direction: column;
+            //     gap: 8px;
+            // }
+
+            .pm-action-btn {
+                padding: 6px 12px;
+                border: 1px solid $gray-300;
+                background: $white;
+                cursor: pointer;
+                border-radius: $border-radius;
+                font-size: $font-size-xs;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                text-decoration: none; // cho <a> giống button
+                color: $gray-800;
+                @include transition();
+
+                &:hover {
+                    background-color: $gray-100;
+                }
+
+                &.pm-approve {
+                    color: $success-color;
+                    border-color: $success-color;
+
+                    &:hover {
+                        background-color: $success-color;
+                        color: $white;
+                    }
+                }
+
+                &.pm-delete {
+                    color: $danger-color;
+                    border-color: $danger-color;
+
+                    &:hover {
+                        background-color: $danger-color;
+                        color: $white;
+                    }
+                }
+
+                &.btn-view {
+                    font-size: $font-size-base;
+                    padding: 6px 10px;
+                    border-color: $primary-color;
+                    background: transparent;
+                    color: $primary-color;
+
+                    &:hover {
+                        background-color: $primary-color;
+                        color: $white;
+                    }
+                }
+            }
+        }
+    }
+
+    th,
+    td {
+        padding: 12px 8px;
+        text-align: left;
+        border-bottom: 1px solid $gray-200;
+    }
+
+    td img {
+        width: 150px;
+        height: auto;
+    }
+
+    td .author-info{
+        display: flex;
+    }
+
+    td .author-info img{
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        margin: 5px;
+    }
+
+    th {
+        background-color: $gray-100;
+        font-weight: 600;
+        color: $gray-700;
+        position: sticky;
+        top: 0;
+    }
+
+    tr:hover {
+        background-color: $gray-100;
+    }
+
+    .pm-checkbox {
+        width: 20px;
+    }
+
+    .pm-post-id {
+        width: 40px;
+        text-align: center;
+    }
+
+    .pm-actions {
+        width: 120px;
+    }
+
+    .pm-status {
+        width: 100px;
+    }
+
+    .pm-view-count,
+    .pm-like-count {
+        width: 80px;
+        text-align: center;
+    }
+
+    .pm-dates {
+        width: 140px;
+        font-size: $font-size-xs;
+    }
+
+    .pm-checkbox-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
+// Action Links
+.pm-action-link {
+    color: $primary-color;
+    text-decoration: none;
+    margin-right: 10px;
+    font-size: $font-size-xs;
+    @include transition();
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &.pm-edit {
+        color: $info-color;
+    }
+
+    &.pm-delete {
+        color: $danger-color;
+    }
+}
+
+// Null Text
+.pm-null-text {
+    color: $gray-600;
+    font-style: italic;
+}
+
+// Community Posts View
+.pm-community-header {
+    color: $gray-600;
+    font-size: $font-size-lg;
+    margin-bottom: 20px;
+
+    .pm-breadcrumb {
+        color: $primary-color;
+    }
+}
+
+.pm-posts-tabs {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid $gray-200;
+
+    .pm-posts-tab {
+        padding: 10px 0;
+        color: $gray-600;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        @include transition();
+
+        &.pm-active {
+            color: $primary-color;
+            border-bottom-color: $primary-color;
+        }
+    }
+}
+
+.pm-posts-filters {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .pm-search-box {
+        flex: 1;
+        max-width: 300px;
+        position: relative;
+
+        input {
+            width: 80%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid $gray-300;
+            border-radius: $border-radius;
+            font-size: $font-size-base;
+        }
+
+        button {
+            left: 15px;
+        }
+
+        button,
+        .fa-search {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: $gray-600;
+        }
+    }
+
+    .pm-filter-select {
+        padding: 10px 15px;
+        margin-left: 10px;
+        border: 1px solid $gray-300;
+        border-radius: $border-radius;
+        background: $white;
+        font-size: $font-size-base;
+    }
+
+    .pm-apply-btn,
+    .pm-reset-btn {
+        padding: 10px 20px;
+        background-color: $secondary-color;
+        color: $white;
+        border: none;
+        border-radius: $border-radius;
+        cursor: pointer;
+        font-size: $font-size-base;
+        @include transition();
+
+        &:hover {
+            background-color: darken($secondary-color, 10%);
+        }
+    }
+
+    .pm-reset-btn {
+        font-size: 14px;
+        padding: 6px 20px;
+        text-decoration: none;
+    }
+}
+
+.pm-posts-table-header {
+    display: grid;
+    grid-template-columns: 1fr 150px 120px 120px 100px;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid $gray-200;
+    font-weight: 600;
+    color: $gray-700;
+}
+
+.pm-post-row {
+    display: grid;
+    grid-template-columns: 1fr 150px 120px 120px 100px;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid $gray-200;
+    align-items: center;
+
+    &:hover {
+        background-color: $gray-100;
+    }
+
+    .pm-post-info {
+        display: flex;
+        gap: 15px;
+
+        .pm-post-image {
+            width: 80px;
+            height: 80px;
+            border-radius: $border-radius;
+            object-fit: cover;
+        }
+
+        .pm-post-details {
+            h4 {
+                font-size: $font-size-base;
+                margin-bottom: 5px;
+                color: $gray-800;
+            }
+
+            p {
+                font-size: $font-size-xs;
+                color: $gray-600;
+                line-height: 1.4;
+            }
+        }
+    }
+
+    .pm-post-id-cell {
+        font-weight: 600;
+        color: $gray-700;
+    }
+
+    .pm-post-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .pm-action-btn {
+            padding: 6px 12px;
+            border: 1px solid $gray-300;
+            background: $white;
+            cursor: pointer;
+            border-radius: $border-radius;
+            font-size: $font-size-xs;
+            @include transition();
+
+            &.pm-approve {
+                color: $success-color;
+                border-color: $success-color;
+
+                &:hover {
+                    background-color: $success-color;
+                    color: $white;
+                }
+            }
+
+            &.pm-delete {
+                color: $danger-color;
+                border-color: $danger-color;
+
+                &:hover {
+                    background-color: $danger-color;
+                    color: $white;
+                }
+            }
+        }
+    }
+}
+
+.pm-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #495057;
+
+    & a {
+        text-decoration: none;
+    }
+
+    & a.pm-page-btn {
+        border: none;
+        background-color: #dee2e6;
+        color: #212529;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    & a.pm-page-btn i {
+        font-size: 14px;
+    }
+
+    /* Hover effect */
+    & a.pm-page-btn:hover:not(:disabled) {
+        background-color: #007bff;
+        color: #ffffff;
+    }
+
+    /* Disabled state */
+    & button.pm-page-btn:disabled {
+        background-color: #f1f3f5;
+        color: #adb5bd;
+        cursor: not-allowed;
+    }
+
+    .page-info {
+        font-weight: 600;
+        min-width: 120px;
+        text-align: center;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Container chung cho message */
+.success-message,
+.error-message {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 15px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+/* Message thành công */
+.success-message {
+    background-color: #d4edda; /* xanh nhạt */
+    color: #155724; /* xanh đậm */
+    border: 1px solid #c3e6cb;
+}
+
+/* Message lỗi */
+.error-message {
+    background-color: #f8d7da; /* đỏ nhạt */
+    color: #721c24; /* đỏ đậm */
+    border: 1px solid #f5c6cb;
+}
+
+/* Animation fade in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+@media screen and (max-width: 768px) {
+    .pm-container {
+        max-width: 100%;
+        width: calc(100% - 30px);
+        padding: 10px 15px;
+        margin: 0;
+    }
+
+    // Điều chỉnh tab navigation thành dạng cột hoặc cuộn ngang
+    .pm-tab-navigation {
+        flex-wrap: wrap;
+        gap: 10px;
+
+        .pm-tab-nav-item {
+            flex: 1 1 100%;
+            padding: 12px 15px;
+            font-size: $font-size-sm;
+            text-align: center;
+            border-bottom-width: 2px;
+        }
+    }
+
+    // Giảm padding và font size cho tab content
+    .pm-tab-content {
+        padding: 15px 10px;
+        font-size: $font-size-sm;
+    }
+
+    // Table controls chuyển sang dạng cột, các nút nhỏ hơn
+    .pm-table-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+
+        .pm-bulk-actions button {
+            padding: 6px 12px;
+            font-size: $font-size-xs;
+        }
+    }
+
+    // Data table: chuyển sang dạng block hoặc cuộn ngang
+    .pm-data-table {
+        display: block;
+        overflow-x: auto;
+        font-size: $font-size-xs;
+
+        th,
+        td {
+            padding: 8px 6px;
+            white-space: nowrap;
+        }
+    }
+
+    // Pagination căn giữa, nút nhỏ hơn
+    .pm-pagination {
+        font-size: $font-size-sm;
+        gap: 8px;
+
+        button.pm-page-btn {
+            padding: 6px 12px;
+            font-size: $font-size-xs;
+        }
+
+        #page-info {
+            min-width: auto;
+            font-size: $font-size-xs;
+        }
+    }
+
+    // Các phần filter và search box co lại
+    .pm-posts-filters {
+        flex-direction: column;
+        gap: 10px;
+
+        .pm-search-box {
+            max-width: 100%;
+
+            input {
+                width: 100%;
+                padding-left: 35px;
+            }
+        }
+
+        .pm-filter-select,
+        .pm-apply-btn,
+        .pm-reset-btn {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+
+    // Các dòng bài viết dạng grid co lại
+    .pm-posts-table-header,
+    .pm-post-row {
+        grid-template-columns: 1fr 100px 100px 100px 80px;
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    .pm-post-info {
+        .pm-post-image {
+            width: 60px;
+            height: 60px;
+        }
+
+        .pm-post-details {
+            h4 {
+                font-size: $font-size-sm;
+            }
+
+            p {
+                font-size: $font-size-xs;
+            }
+        }
+    }
+
+    .pm-post-actions {
+        flex-direction: row;
+        gap: 6px;
+
+        .pm-action-btn {
+            padding: 4px 8px;
+            font-size: $font-size-xs;
+        }
+    }
+}

@@ -198,7 +198,7 @@
 }
 
 .mobile_login:hover {
-    background-color: #0056b3;
+    background-color: #034081;
 }
 
 
@@ -218,10 +218,43 @@
     }
 }
 
+/* Mobile chevron icon - hidden by default */
+.category_chevron {
+    display: none;
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+/* Mobile Category Dropdown */
+.mobile_category_dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: var(--light-gray);
+}
+
+.mobile_category_dropdown.active {
+    max-height: 200px;
+}
+
+.mobile_category_item {
+    display: block;
+    padding: 0.8rem 2rem;
+    color: var(--text-color);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.mobile_category_item:hover {
+    background: var(--white);
+    color: var(--primary-color-1);
+}
 
 // JavaScript will add the .sticky class when scrolling
 
 @media only screen and (max-width: 768px) {
+
     .nav_left .nav_list,
     .nav_right .search_box,
     .nav_right .cart_btn {
@@ -251,15 +284,53 @@
         &_wrapper {
             width: 100%;
         }
-        &_category{
+
+        &_category {
             background-image: none;
             height: 10rem;
         }
-        &_btns{
+
+        &_btns {
             display: flex;
-            & > .btn{
+
+            &>.btn {
                 padding: 5px 10px;
             }
         }
+    }
+
+    /* Show mobile menu button */
+    .mobile_menu_btn {
+        display: flex;
+    }
+
+    /* Show chevron icon on mobile for category */
+    .category_chevron {
+        display: inline-block;
+    }
+
+    /* Mobile category dropdown positioning */
+    .mobile_category_dropdown {
+        position: static;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+}
+
+.mobile_menu_btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+@media (min-width: 769px) {
+    .mobile_menu_btn {
+        display: none;
     }
 }

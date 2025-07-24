@@ -2,8 +2,10 @@
   "name": "websitepet",
   "version": "1.0.0",
   "main": "index.js",
+  "admin": "admin.js",
   "scripts": {
-    "watch": "sass --watch main.scss public/css/styles.css"
+    "watch": "sass --watch main.scss public/css/styles.css",
+    "admin_watch": "sass --watch admin.scss public/css/admin/admin.css"
   },
   "keywords": [],
   "author": "",

@@ -118,6 +118,18 @@
         &:hover {
             color: var(--primary-color-1);
         }
+        /* Active page underline */
+        &.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--primary-color-1);
+            border-radius: 2px;
+        }
     }
 
     &_right {
@@ -214,7 +226,7 @@
     position: relative;
 }
 
-.notify_box {
+.notify_box_login_register {
     position: absolute;
     top: 55px;
     right: 0;
@@ -322,16 +334,19 @@
         background: var(--primary-color-1);
         color: var(--white);
         border: 2px solid var(--primary-color-1);
+
         &:hover {
             background: var(--white);
             color: var(--primary-color-1);
             transform: translateY(-1px);
         }
     }
+
     &.register {
         background: transparent;
         color: var(--primary-color-1);
         border: 2px solid var(--primary-color-1);
+
         &:hover {
             background: var(--primary-color-1);
             color: var(--white);
@@ -377,6 +392,62 @@
     &:last-child {
         margin-bottom: 0;
     }
+}
+
+/* Category Dropdown Styles */
+.category_dropdown {
+    position: absolute;
+    top: 180%;
+    left: 0;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    padding: 1.5rem;
+    width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 20px;
+        width: 16px;
+        height: 16px;
+        background: var(--white);
+        transform: rotate(45deg);
+        box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    &_item {
+        display: block;
+        padding: 0.8rem 1rem;
+        color: var(--text-color);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    &_item:hover {
+        background: var(--light-gray);
+        color: var(--primary-color-1);
+        transform: translateX(5px);
+    }
+
+    &_item:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.nav_item:hover .category_dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 // Responsive

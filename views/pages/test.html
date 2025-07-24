@@ -3,10 +3,613 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../models/User.php">
-    <title>Document</title>
+    <title>New Product Form</title>
+    <style>
+
+        .form-container_add_newProduct {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .left-column_add_newProduct {
+            padding: 24px;
+            border-right: 1px solid #e5e5e5;
+        }
+
+        .right-column_add_newProduct {
+            padding: 24px;
+        }
+
+        .section_add_newProduct {
+            margin-bottom: 24px;
+        }
+
+        .section-title_add_newProduct {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .form-group_add_newProduct {
+            margin-bottom: 16px;
+        }
+
+        .form-label_add_newProduct {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .form-input_add_newProduct {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input_add_newProduct:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .form-textarea_add_newProduct {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        .form-textarea_add_newProduct:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .form-select_add_newProduct {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .form-select_add_newProduct:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .upload-area_add_newProduct {
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .upload-area_add_newProduct:hover {
+            border-color: #4a90e2;
+        }
+
+        .upload-text_add_newProduct {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .upload-link_add_newProduct {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .upload-link_add_newProduct:hover {
+            text-decoration: underline;
+        }
+
+        .image-preview_add_newProduct {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .image-preview_add_newProduct img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .image-placeholder_add_newProduct {
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .image-grid_add_newProduct {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .image-slot_add_newProduct {
+            aspect-ratio: 1;
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .image-slot_add_newProduct:hover {
+            border-color: #4a90e2;
+        }
+
+        .size-grid_add_newProduct {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .size-option_add_newProduct {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: white;
+        }
+
+        .size-option_add_newProduct:hover {
+            border-color: #4a90e2;
+            background-color: #f8f9fa;
+        }
+
+        .size-option_add_newProduct.selected {
+            border-color: #4a90e2;
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        .radio-group_add_newProduct {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-option_add_newProduct {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-input_add_newProduct {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .radio-label_add_newProduct {
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .form-row_add_newProduct {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .help-text_add_newProduct {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .form-actions_add_newProduct {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            margin-bottom: 15px;
+            margin-right: 10px;
+            grid-column: 1 / -1;
+            border-top: 1px solid #e5e5e5;
+            padding-top: 20px;
+        }
+
+        .btn_add_newProduct {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary_add_newProduct {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        .btn-primary_add_newProduct:hover {
+            background-color: #357abd;
+        }
+
+        .btn-secondary_add_newProduct {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary_add_newProduct:hover {
+            background-color: #e9ecef;
+        }
+
+        .btn-danger_add_newProduct {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger_add_newProduct:hover {
+            background-color: #c82333;
+        }
+
+        .availability-list_add_newProduct {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+
+        .availability-item_add_newProduct {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .availability-item_add_newProduct:last-child {
+            margin-bottom: 0;
+        }
+
+        .availability-item_add_newProduct:before {
+            content: "•";
+            color: #4a90e2;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        .upload-icon_add_newProduct {
+            width: 48px;
+            height: 48px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 24px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .form-container_add_newProduct {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .left-column_add_newProduct {
+                border-right: none;
+                border-bottom: 1px solid #e5e5e5;
+            }
+            
+            .form-row_add_newProduct {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../../fontawesome-free-6.4.2-web/css/all.min.css">
+    <link rel="stylesheet" href="../../app/controllers/PostController.php">
 </head>
 <body>
-    
+    <div class="form-container_add_newProduct">
+        <div class="left-column_add_newProduct">
+            <!-- Description Section -->
+            <div class="section_add_newProduct">
+                <h2 class="section-title_add_newProduct"><i class="fa-solid fa-arrow-left" style="margin-left: 10px;"></i> Description</h2>
+                
+                <div class="form-group_add_newProduct">
+                    <label class="form-label_add_newProduct">Product Name</label>
+                    <input type="text" class="form-input_add_newProduct" value="Leather Jacket Fashion Girl Planner" placeholder="Enter product name">
+                </div>
+
+                <div class="form-group_add_newProduct">
+                    <label class="form-label_add_newProduct">Business Description 
+                        <a href="#" class="upload-link_add_newProduct">Upload txt file</a>
+                    </label>
+                    <textarea class="form-textarea_add_newProduct" placeholder="Enter business description">We have been doing jacket business for many years together with our partners.</textarea>
+                    
+                    <div class="availability-list_add_newProduct">
+                        <div style="font-weight: 500; margin-bottom: 8px;">Availability</div>
+                        <div class="availability-item_add_newProduct">We offer our customers a stylish and comfortable use, so we make them comfortable</div>
+                        <div class="availability-item_add_newProduct">We supply the skins of our leather jackets from very special selected customers.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Section -->
+            <div class="section_add_newProduct">
+                <h2 class="section-title_add_newProduct">Category</h2>
+                
+                <div class="form-group_add_newProduct">
+                    <label class="form-label_add_newProduct">Product Category</label>
+                    <select class="form-select_add_newProduct">
+                        <option>Outerwear & Winter</option>
+                        <option>Jackets & Coats</option>
+                        <option>Leather Goods</option>
+                        <option>Fashion Accessories</option>
+                    </select>
+                </div>
+
+                <div class="form-group_add_newProduct">
+                    <label class="form-label_add_newProduct">Product Category</label>
+                    <select class="form-select_add_newProduct">
+                        <option>Leather Jacket</option>
+                        <option>Bomber Jacket</option>
+                        <option>Denim Jacket</option>
+                        <option>Blazer</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quality Section -->
+            <div class="section_add_newProduct">
+                <h2 class="section-title_add_newProduct">Quality</h2>
+                
+                <div class="form-group_add_newProduct">
+                    <select class="form-select_add_newProduct">
+                        <option>New or second hand</option>
+                        <option>New</option>
+                        <option>Second hand</option>
+                        <option>Refurbished</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column_add_newProduct">
+            <!-- Product Image Section -->
+            <div class="section_add_newProduct">
+                <h2 class="section-title_add_newProduct">Product Image</h2>
+                
+                <div class="image-preview_add_newProduct">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMzMzIiByeD0iOCIvPgo8cGF0aCBkPSJNMzAgNDBMMzUgMzVMMzUgNjVMMzAgNjBWNDBaIiBmaWxsPSIjNjY2Ii8+CjxwYXRoIGQ9Ik03MCA0MEw2NSAzNUw2NSA2NUw3MCA2MFY0MFoiIGZpbGw9IiM2NjYiLz4KPHBhdGggZD0iTTQwIDMwTDQ1IDI1TDU1IDI1TDYwIDMwVjcwTDU1IDc1TDQ1IDc1TDQwIDcwVjMwWiIgZmlsbD0iIzY2NiIvPgo8L3N2Zz4K" alt="Leather Jacket">
+                </div>
+
+                <div class="upload-area_add_newProduct">
+                    <div class="upload-icon_add_newProduct">📁</div>
+                    <div class="upload-text_add_newProduct">
+                        Drop an image or 
+                        <span class="upload-link_add_newProduct">selected click to browse</span>
+                    </div>
+                </div>
+
+                <div class="image-grid_add_newProduct">
+                    <div class="image-slot_add_newProduct">
+                        <span>+</span>
+                    </div>
+                    <div class="image-slot_add_newProduct">
+                        <span>+</span>
+                    </div>
+                    <div class="image-slot_add_newProduct">
+                        <span>+</span>
+                    </div>
+                    <div class="image-slot_add_newProduct">
+                        <span>+</span>
+                    </div>
+                    <div class="image-slot_add_newProduct">
+                        <span>+</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Select Size Section -->
+            <div class="section_add_newProduct">
+                <h2 class="section-title_add_newProduct">Select Size</h2>
+                
+                <div class="form-row_add_newProduct">
+                    <div class="form-group_add_newProduct">
+                        <label class="form-label_add_newProduct">Add Size</label>
+                        <select class="form-select_add_newProduct">
+                            <option>EU-44</option>
+                            <option>EU-36</option>
+                            <option>EU-38</option>
+                            <option>EU-40</option>
+                            <option>EU-42</option>
+                            <option>EU-46</option>
+                        </select>
+                    </div>
+                    <div class="form-group_add_newProduct">
+                        <label class="form-label_add_newProduct">Product Date</label>
+                        <select class="form-select_add_newProduct">
+                            <option>05.10.2022</option>
+                            <option>06.10.2022</option>
+                            <option>07.10.2022</option>
+                            <option>08.10.2022</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="size-grid_add_newProduct">
+                    <div class="size-option_add_newProduct selected">EU-44</div>
+                    <div class="size-option_add_newProduct">EU-42</div>
+                    <div class="size-option_add_newProduct">EU-40</div>
+                    <div class="size-option_add_newProduct">EU-38</div>
+                    <div class="size-option_add_newProduct">EU-36</div>
+                    <div class="size-option_add_newProduct">EU-34</div>
+                </div>
+
+                <div class="help-text_add_newProduct">
+                    Please do not choose a future date when choosing the date of sale, we are not responsible for the problems.
+                </div>
+            </div>
+
+            <!-- Sales Channel Section -->
+            <div class="section_add_newProduct">
+                <h2 class="section-title_add_newProduct">Sales Channel</h2>
+                
+                <div class="radio-group_add_newProduct">
+                    <div class="radio-option_add_newProduct">
+                        <input type="radio" id="only-sale_add_newProduct" name="sales-channel_add_newProduct" class="radio-input_add_newProduct" checked>
+                        <label for="only-sale_add_newProduct" class="radio-label_add_newProduct">Only sale market</label>
+                    </div>
+                    <div class="radio-option_add_newProduct">
+                        <input type="radio" id="online-outlet_add_newProduct" name="sales-channel_add_newProduct" class="radio-input_add_newProduct">
+                        <label for="online-outlet_add_newProduct" class="radio-label_add_newProduct">Online sales from the outlet</label>
+                    </div>
+                    <div class="radio-option_add_newProduct">
+                        <input type="radio" id="both-market_add_newProduct" name="sales-channel_add_newProduct" class="radio-input_add_newProduct">
+                        <label for="both-market_add_newProduct" class="radio-label_add_newProduct">Both market and online</label>
+                    </div>
+                    <div class="radio-option_add_newProduct">
+                        <input type="radio" id="online-only_add_newProduct" name="sales-channel_add_newProduct" class="radio-input_add_newProduct">
+                        <label for="online-only_add_newProduct" class="radio-label_add_newProduct">Online sale only</label>
+                    </div>
+                    <div class="radio-option_add_newProduct">
+                        <input type="radio" id="not-all_add_newProduct" name="sales-channel_add_newProduct" class="radio-input_add_newProduct">
+                        <label for="not-all_add_newProduct" class="radio-label_add_newProduct">Not all options</label>
+                    </div>
+                </div>
+
+                <div class="help-text_add_newProduct">
+                    Please select a sales channel first and then find which channel you can sell on. Those who prefer only online sales can never sell from their stores. To be able to sell you must combine the store and the online one. If you do not fulfill your responsibilities.
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions_add_newProduct">
+            <button type="button" class="btn_add_newProduct btn-danger_add_newProduct">Discard</button>
+            <button type="button" class="btn_add_newProduct btn-secondary_add_newProduct">Save Product</button>
+            <button type="submit" class="btn_add_newProduct btn-primary_add_newProduct">Add Product</button>
+        </div>
+    </div>
+
+    <script>
+        // Size selection functionality
+        document.querySelectorAll('.size-option_add_newProduct').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.size-option_add_newProduct').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Image upload functionality
+        document.querySelector('.upload-area_add_newProduct').addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.querySelector('.image-preview_add_newProduct img');
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        });
+
+        // Image slot functionality
+        document.querySelectorAll('.image-slot_add_newProduct').forEach(slot => {
+            slot.addEventListener('click', function() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            slot.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                input.click();
+            });
+        });
+
+        // Form submission
+        document.querySelector('.btn-primary_add_newProduct').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Product added successfully!');
+        });
+
+        document.querySelector('.btn-secondary_add_newProduct').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Product saved as draft!');
+        });
+
+        document.querySelector('.btn-danger_add_newProduct').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to discard this product?')) {
+                // Reset form
+                document.querySelectorAll('.form-input_add_newProduct, .form-textarea_add_newProduct').forEach(input => {
+                    if (input.type !== 'radio') input.value = '';
+                });
+                document.querySelectorAll('.radio-input_add_newProduct').forEach(radio => {
+                    radio.checked = radio.id === 'only-sale_add_newProduct';
+                });
+                document.querySelectorAll('.size-option_add_newProduct').forEach(opt => {
+                    opt.classList.remove('selected');
+                    if (opt.textContent === 'EU-44') opt.classList.add('selected');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
